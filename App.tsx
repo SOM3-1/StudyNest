@@ -11,10 +11,11 @@ import {
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import ErrorBoundary from 'react-native-error-boundary';
-import { CustomError } from 'src/commom/CustomError';
 import { Notifications } from 'src/commom/notifications/Notifications';
 import { requestNotificationsPermission } from '@services/notifications/notificationPermissionService';
 import { getFirebaseToken } from '@services/notifications/firebaseToken';
+import { MenuWrapperComponent } from '@components/menu/MenuWrapper';
+import { CustomError } from 'src/commom/CustomError';
 
 function App(): React.JSX.Element {
 
@@ -36,9 +37,7 @@ function App(): React.JSX.Element {
             <StatusBar />
             <ScrollView contentContainerStyle={styles.scrollView}>
               <Notifications />
-              <View style={styles.centeredView}>
-                <Text style={{ color: 'black', fontSize: 20 }}>Demo App</Text>
-              </View>
+              <MenuWrapperComponent />
             </ScrollView>
           </SafeAreaView>
         </PersistGate>
