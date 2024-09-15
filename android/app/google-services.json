@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "194625229425",
+    "project_id": "android-app-f9208",
+    "storage_bucket": "android-app-f9208.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194625229425:android:2d1bb4d84b9f928bdac1d0",
+        "android_client_info": {
+          "package_name": "com.studynest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD-ZQmeHTgRt1LyWKEiro7W4-Uhz7hYus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
