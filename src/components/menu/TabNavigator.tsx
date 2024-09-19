@@ -5,6 +5,7 @@ import { CustomTabBar } from './CustomTabBar';
 import { theme } from 'src/utils/theme';
 import { menuStyles } from './menuStyles';
 import { HomeNavigator } from '@components/Navigators/HomeNavigator';
+import { ProfileNavigator } from '@components/Navigators/ProfileNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,9 +47,9 @@ export const TabNavigator = () => {
       />
 
       <Tab.Screen
-        name="HomeNavigator3"
-        component={HomeNavigator}
-        options={{title: 'settings', headerTitle: 'Settings'}}
+        name="Profile"
+        component={ProfileNavigator}
+        options={{title: 'person', headerTitle: 'Account'}}
         listeners={tabPressListener}
       />
     </Tab.Navigator>
