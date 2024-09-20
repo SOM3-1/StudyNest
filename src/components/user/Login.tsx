@@ -7,6 +7,7 @@ import { AppState } from '@ourtypes/AppState';
 import { loginStyles } from './loginStyles';
 import { SelectionType } from './UserSelection';
 import { registrationStyles } from './registrationStyles';
+import { log } from '@services/Logger';
 
 export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> = ({ handleSelection }) => {
   const [email, setEmail] = useState('');
@@ -49,7 +50,7 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
       }
     } catch (err) {
       setError('An error occurred during login');
-      console.error('Login error:', err);
+      log.error('Login error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +58,7 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
 
   return (
     <View style={loginStyles.container}>
-      <Text style={loginStyles.header}>Login</Text>
+      <Text style={loginStyles.header}>User Login</Text>
 
       {error ? <Text style={loginStyles.errorText}>{error}</Text> : null}
 

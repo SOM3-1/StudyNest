@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppState, User } from '@ourtypes/AppState';
-import { generateUUID } from '@components/helpers/uuidGenerator';
+import { dummyUsers } from '@constants/users';
 
 const persistConfig = {
     key: 'root',
@@ -12,7 +12,7 @@ const persistConfig = {
 
   const initialState : AppState = {
     isLoggedIn: false,
-    users: [],
+    users: dummyUsers,
     loggedInUser: undefined,
   }
 

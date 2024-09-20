@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '@store/appSilce';
 import { AppState } from '@ourtypes/AppState';
@@ -7,6 +7,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { generateUUID } from '@components/helpers/uuidGenerator';
 import { registrationStyles } from './registrationStyles';
 import { SelectionType } from './UserSelection';
+import { Picker } from '@react-native-picker/picker';
+import { MAJORS } from '@constants/majors';
+import { log } from '@services/Logger';
 
 export const Register: React.FC<{ handleSelection: (val: SelectionType) => void }> = ({ handleSelection }) => {
   const [fullName, setFullName] = useState('');
@@ -64,13 +67,14 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
       const newUser = { fullName, email, major, password, iD: generateUUID() };
       dispatch(registerUser(newUser));
 
+      // Reset fields after registration
       setFullName('');
       setEmail('');
-      setMajor('');
+      setMajor(''); // Reset major to show "Select Major"
       setPassword('');
     } catch (err) {
       setError('An error occurred during registration');
-      console.error('Registration error:', err);
+      log.error('Registration error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +82,7 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
 
   return (
     <View style={registrationStyles.container}>
-      <Text style={registrationStyles.header}>Register</Text>
+      <Text style={registrationStyles.header}>User Registeration</Text>
 
       {error ? <Text style={registrationStyles.errorText}>{error}</Text> : null}
 
@@ -106,13 +110,19 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
 
       <View style={registrationStyles.inputContainer}>
         <Icon name="school" size={20} color="#000" style={registrationStyles.icon} />
-        <TextInput
+        <Picker
+          selectedValue={major}
+          onValueChange={(itemValue) => {
+            setMajor(itemValue);
+          }}
           style={registrationStyles.input}
-          placeholder="Major"
-          value={major}
-          onChangeText={setMajor}
-        />
+        >
+          {MAJORS.map((major) => (
+            <Picker.Item key={major.value} label={major.label} value={major.value} />
+          ))}
+        </Picker>
       </View>
+
 
       <View style={[registrationStyles.inputContainer, error.includes('Password must be at least 8 characters') && registrationStyles.errorBorder]}>
         <Icon name="lock" size={20} color="#000" style={registrationStyles.icon} />
@@ -140,10 +150,11 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
 
       <View style={registrationStyles.footerContainer}>
         <Text style={registrationStyles.footerText}>
-          Already have an account?{' '}</Text>
-          <TouchableOpacity onPress={() => handleSelection(SelectionType.login)}>
-            <Text style={registrationStyles.footerLink}>Log In</Text>
-          </TouchableOpacity>
+          Already have an account?{' '}
+        </Text>
+        <TouchableOpacity onPress={() => handleSelection(SelectionType.login)}>
+          <Text style={registrationStyles.footerLink}>Log In</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
