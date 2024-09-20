@@ -9,6 +9,7 @@ import { registrationStyles } from './registrationStyles';
 import { SelectionType } from './UserSelection';
 import { Picker } from '@react-native-picker/picker';
 import { MAJORS } from '@constants/majors';
+import { log } from '@services/Logger';
 
 export const Register: React.FC<{ handleSelection: (val: SelectionType) => void }> = ({ handleSelection }) => {
   const [fullName, setFullName] = useState('');
@@ -73,7 +74,7 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
       setPassword('');
     } catch (err) {
       setError('An error occurred during registration');
-      console.error('Registration error:', err);
+      log.error('Registration error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +82,7 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
 
   return (
     <View style={registrationStyles.container}>
-      <Text style={registrationStyles.header}>Register</Text>
+      <Text style={registrationStyles.header}>User Registeration</Text>
 
       {error ? <Text style={registrationStyles.errorText}>{error}</Text> : null}
 
