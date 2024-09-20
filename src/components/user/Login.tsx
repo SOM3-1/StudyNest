@@ -39,6 +39,7 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
     setIsLoading(true);
 
     try {
+      console.log(users)
       const user = users.find(user => user.email === email && user.password === password);
 
       if (user) {
