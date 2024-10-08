@@ -25,6 +25,7 @@ const slice = createSlice({
   name: 'app',
   initialState,
   reducers: {
+
     registerUser: (state, action: PayloadAction<{ fullName: string; email: string; major: string; password: string, iD: string }>) => {
       const { email, fullName, major, password, iD } = action.payload;
       const existingUser = state.users.find(user => user.email === email);
@@ -42,6 +43,7 @@ const slice = createSlice({
         state.loggedInUser = newUser;
       }
     },
+
     loginUser: (state, action: PayloadAction<{ email: string; password: string }>) => {
       const { email, password } = action.payload;
       const user = state.users.find(user => user.email === email && user.password === password);
@@ -50,6 +52,7 @@ const slice = createSlice({
         state.loggedInUser = user;
       }
     },
+
     logoutUser: (state) => {
       state.isLoggedIn = false;
       state.loggedInUser = undefined;
@@ -58,6 +61,10 @@ const slice = createSlice({
     addStudySession: (state, action: PayloadAction<{ sessionTitle: string; description: string; date: string; from: string; to: string; location: string; major: string; participantLimit: number }>) => {
       const { sessionTitle, description, date, from, to, location, major } = action.payload;
       if (state.loggedInUser) {
+        
+        const user = state.users.find(user => user.iD === state.loggedInUser?.iD);
+        const userName = user?.fullName || 'Unknown';
+
         const newSession: Session = {
           sessionId: generateUUID(),
           sessionTitle,
@@ -72,7 +79,7 @@ const slice = createSlice({
           sessionMembers: []
         };
         state.sessions.push(newSession);
-        trackSessionCreation(newSession)
+        trackSessionCreation(newSession, userName)
       }
     },
 

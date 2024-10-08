@@ -2,6 +2,7 @@ import { Session } from "@constants/sessions";
 import { dummyUsers } from "@constants/users";
 import { generateUUID } from "./uuidGenerator";
 import { DateTime } from 'luxon';
+import { trackSessionCreation } from "src/analytics/trackEvent";
 
 export const UTA_LOCATIONS = [
     'The Commons', 
@@ -72,6 +73,7 @@ export const generateRandomSessions = (): Session[] => {
             };
 
             sessions.push(session);
+            trackSessionCreation(session, creator.fullName)
         }
     }
 

@@ -3,7 +3,7 @@ import analytics from '@react-native-firebase/analytics';
 import { log } from '@services/Logger';
 import { addSessionMemberToFirestore, deleteSessionFromFirestore, removeSessionMemberFromFirestore, saveSessionToFirestore } from './sessionStrore';
 
-export const trackSessionCreation = (session: Session): void => {
+export const trackSessionCreation = (session: Session, fullName: string): void => {
     analytics()
       .logEvent('session_created', {
         sessionId: session.sessionId,
@@ -14,9 +14,10 @@ export const trackSessionCreation = (session: Session): void => {
         to: session.to,
         location: session.location,
         major: session.major,
-        createdBy: session.createdBy,
+        createdById: session.createdBy,
         participantLimit: session.participantLimit,
         sessionMembers: session.sessionMembers,
+        fullName
       })
       .catch(error => {
         log.error(error);

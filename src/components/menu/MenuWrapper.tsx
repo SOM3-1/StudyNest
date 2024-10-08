@@ -25,9 +25,9 @@ export const MenuWrapperComponent = () => {
   };
 
   const stateChange = async () => {
-    const previousRouteName = routeNameRef.current;
-    const currentRouteName = navigationRef.current.getCurrentRoute().name;
-    if (previousRouteName !== currentRouteName) {
+    const previousRouteName = routeNameRef?.current;
+    const currentRouteName = navigationRef?.current?.getCurrentRoute()?.name;
+    if ((previousRouteName && currentRouteName) && previousRouteName !== currentRouteName) {
       routeNameRef.current = currentRouteName;
       trackScreenName(routeNameRef.current);
     }
