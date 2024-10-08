@@ -35,10 +35,7 @@ function App(): React.JSX.Element {
         <PersistGate loading={null} persistor={persistor}>
           <SafeAreaView style={styles.safeArea}>
             <StatusBar />
-            <ScrollView contentContainerStyle={styles.scrollView}>
-              <Notifications />
               <MenuWrapperComponent />
-            </ScrollView>
           </SafeAreaView>
         </PersistGate>
       </Provider>
