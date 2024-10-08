@@ -10,7 +10,7 @@ export const homeScreenStyles = StyleSheet.create({
   card: {
     backgroundColor: theme.colors.lightBlue,
     borderRadius: 16,
-    padding: 10,
+    padding: 8,
     marginBottom: 12,
     shadowColor: theme.colors.shadowColor,
     shadowOffset: { width: 0, height: 2 },
@@ -26,7 +26,8 @@ export const homeScreenStyles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: 8,
     padding: 12,
-    borderWidth: 0,
+    borderWidth: 2,
+    borderColor: theme.colors.bgBlue,
   },
   cardHeader: {
     flexDirection: 'row',

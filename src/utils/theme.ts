@@ -29,7 +29,7 @@ export const theme = {
     blue: '#0059A7',
     green: '#00703C',
     bgBlue: '#83d2f3',
-    lightBlue: '#c6e5f2'
+    lightBlue: '#caedfa'
   },
   fontWeight: {
     bold: 'bold',
