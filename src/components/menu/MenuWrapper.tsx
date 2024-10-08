@@ -17,7 +17,7 @@ export const MenuWrapperComponent = () => {
   return (
     <View style={styles.safeArea}>
       <NavigationContainer ref={navigationRef}>
-        {isLoggedIn ? <><TabNavigator /><Notifications /></>: <UserSelection />}
+        {isLoggedIn ?<TabNavigator />: <UserSelection />}
       </NavigationContainer>
     </View>
   );
