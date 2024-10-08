@@ -7,12 +7,12 @@ import { headerLeft, headerOptions } from '@constants/menuConstants';
 export const HomeNavigator: React.FC = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="home"
       screenOptions={{
         ...headerOptions,
       }}>
       <Stack.Screen
-        name="Home"
+        name="home"
         component={Home}
         options={{
             ...headerOptions,

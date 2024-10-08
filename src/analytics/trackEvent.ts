@@ -1,6 +1,7 @@
 import { Session } from '@constants/sessions';
 import analytics from '@react-native-firebase/analytics';
 import { log } from '@services/Logger';
+import { addSessionMemberToFirestore, deleteSessionFromFirestore, removeSessionMemberFromFirestore, saveSessionToFirestore } from './sessionStrore';
 
 export const trackSessionCreation = (session: Session): void => {
     analytics()
@@ -20,6 +21,7 @@ export const trackSessionCreation = (session: Session): void => {
       .catch(error => {
         log.error(error);
       });
+      saveSessionToFirestore(session)
   };
 
 export const trackSessionJoin = (sessionId: string, userId: string): void => {
@@ -31,6 +33,7 @@ export const trackSessionJoin = (sessionId: string, userId: string): void => {
     .catch(error => {
       log.error(error);
     });
+    addSessionMemberToFirestore(sessionId, userId);
 };
 
 export const trackSessionLeave = (sessionId: string, userId: string): void => {
@@ -42,6 +45,7 @@ export const trackSessionLeave = (sessionId: string, userId: string): void => {
     .catch(error => {
       log.error(error);
     });
+    removeSessionMemberFromFirestore(sessionId, userId);
 };
 
 export const trackSessionRemoval = (sessionId: string, removedBy: string): void => {
@@ -53,4 +57,5 @@ export const trackSessionRemoval = (sessionId: string, removedBy: string): void 
     .catch(error => {
       log.error(error);
     });
+    deleteSessionFromFirestore(sessionId)
 };
