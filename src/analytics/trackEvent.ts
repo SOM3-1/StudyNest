@@ -3,7 +3,7 @@ import analytics from '@react-native-firebase/analytics';
 import { log } from '@services/Logger';
 import { addSessionMemberToFirestore, deleteSessionFromFirestore, removeSessionMemberFromFirestore, saveSessionToFirestore } from './sessionStrore';
 
-export const trackSessionCreation = (session: Session): void => {
+export const trackSessionCreation = (session: Session, fullName: string): void => {
     analytics()
       .logEvent('session_created', {
         sessionId: session.sessionId,
@@ -14,9 +14,10 @@ export const trackSessionCreation = (session: Session): void => {
         to: session.to,
         location: session.location,
         major: session.major,
-        createdBy: session.createdBy,
+        createdById: session.createdBy,
         participantLimit: session.participantLimit,
         sessionMembers: session.sessionMembers,
+        fullName
       })
       .catch(error => {
         log.error(error);
@@ -24,11 +25,12 @@ export const trackSessionCreation = (session: Session): void => {
       saveSessionToFirestore(session)
   };
 
-export const trackSessionJoin = (sessionId: string, userId: string): void => {
+export const trackSessionJoin = (sessionId: string, userId: string, fullName: string): void => {
   analytics()
     .logEvent('session_joined', {
       sessionId,
       userId,
+      fullName
     })
     .catch(error => {
       log.error(error);
@@ -36,11 +38,12 @@ export const trackSessionJoin = (sessionId: string, userId: string): void => {
     addSessionMemberToFirestore(sessionId, userId);
 };
 
-export const trackSessionLeave = (sessionId: string, userId: string): void => {
+export const trackSessionLeave = (sessionId: string, userId: string, fullName: string): void => {
   analytics()
     .logEvent('session_left', {
       sessionId,
       userId,
+      fullName
     })
     .catch(error => {
       log.error(error);
@@ -48,11 +51,12 @@ export const trackSessionLeave = (sessionId: string, userId: string): void => {
     removeSessionMemberFromFirestore(sessionId, userId);
 };
 
-export const trackSessionRemoval = (sessionId: string, removedBy: string): void => {
+export const trackSessionRemoval = (sessionId: string, removedBy: string, fullName: string): void => {
   analytics()
     .logEvent('session_removed', {
       sessionId,
       removedBy,
+      fullName
     })
     .catch(error => {
       log.error(error);

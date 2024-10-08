@@ -128,5 +128,13 @@ export const dummyUsers: User[] = [
         password: 'password123',
         iD: 'p6p6p6p6-p6p6-p6p6-p6p6-p6p6p6p6p6p6',
         sessions: []
-    }
+    },
+    {
+        fullName: 'Zoe Doe',
+        email: 'z@mail.com',
+        major: 'Computer Science',
+        password: 'password123',
+        iD: 'z1z1z1z1-z1z1-z1z1-z1z1-z1z1z1z1z1z',
+        sessions: []
+    },
 ];
