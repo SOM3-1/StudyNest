@@ -61,7 +61,7 @@ const slice = createSlice({
     addStudySession: (state, action: PayloadAction<{ sessionTitle: string; description: string; date: string; from: string; to: string; location: string; major: string; participantLimit: number }>) => {
       const { sessionTitle, description, date, from, to, location, major } = action.payload;
       if (state.loggedInUser) {
-        
+
         const user = state.users.find(user => user.iD === state.loggedInUser?.iD);
         const userName = user?.fullName || 'Unknown';
 
@@ -85,21 +85,25 @@ const slice = createSlice({
 
     removeStudySession: (state, action: PayloadAction<{ sessionId: string }>) => {
       const { sessionId } = action.payload;
+      const user = state.users.find(user => user.iD === state.loggedInUser?.iD);
+      const userName = user?.fullName || 'Unknown';
       state.sessions = state.sessions.filter(session => session.sessionId !== sessionId || session.createdBy !== state.loggedInUser?.iD);
-      trackSessionRemoval(sessionId, state.loggedInUser?.iD || '');
+      trackSessionRemoval(sessionId, state.loggedInUser?.iD || '', userName);
     },
 
     enrollInStudySession: (state, action: PayloadAction<{ sessionId: string }>) => {
       const { sessionId } = action.payload;
       const session = state.sessions.find(session => session.sessionId === sessionId);
       if (session && session.sessionMembers.length < session?.participantLimit && state.loggedInUser) {
+        
         session.sessionMembers.push(state.loggedInUser.iD);
 
         const user = state.users.find(user => user.iD === state.loggedInUser?.iD);
+        const userName = user?.fullName || 'Unknown';
         if (user) {
           user.sessions.push(sessionId);
         }
-        trackSessionJoin(sessionId, state.loggedInUser.iD || '');
+        trackSessionJoin(sessionId, state.loggedInUser.iD || '', userName);
       }
     },
 
@@ -111,10 +115,11 @@ const slice = createSlice({
 
 
         const user = state.users.find(user => user.iD === state.loggedInUser?.iD);
+        const userName = user?.fullName || 'Unknown';
         if (user) {
           user.sessions = user.sessions.filter(sId => sId !== sessionId);
         }
-        trackSessionLeave(sessionId, state.loggedInUser.iD);
+        trackSessionLeave(sessionId, state.loggedInUser.iD, userName);
       }
     },
   }

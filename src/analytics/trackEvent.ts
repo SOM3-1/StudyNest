@@ -25,11 +25,12 @@ export const trackSessionCreation = (session: Session, fullName: string): void =
       saveSessionToFirestore(session)
   };
 
-export const trackSessionJoin = (sessionId: string, userId: string): void => {
+export const trackSessionJoin = (sessionId: string, userId: string, fullName: string): void => {
   analytics()
     .logEvent('session_joined', {
       sessionId,
       userId,
+      fullName
     })
     .catch(error => {
       log.error(error);
@@ -37,11 +38,12 @@ export const trackSessionJoin = (sessionId: string, userId: string): void => {
     addSessionMemberToFirestore(sessionId, userId);
 };
 
-export const trackSessionLeave = (sessionId: string, userId: string): void => {
+export const trackSessionLeave = (sessionId: string, userId: string, fullName: string): void => {
   analytics()
     .logEvent('session_left', {
       sessionId,
       userId,
+      fullName
     })
     .catch(error => {
       log.error(error);
@@ -49,11 +51,12 @@ export const trackSessionLeave = (sessionId: string, userId: string): void => {
     removeSessionMemberFromFirestore(sessionId, userId);
 };
 
-export const trackSessionRemoval = (sessionId: string, removedBy: string): void => {
+export const trackSessionRemoval = (sessionId: string, removedBy: string, fullName: string): void => {
   analytics()
     .logEvent('session_removed', {
       sessionId,
       removedBy,
+      fullName
     })
     .catch(error => {
       log.error(error);
