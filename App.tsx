@@ -24,21 +24,17 @@ function App(): React.JSX.Element {
   );
 
   useEffect(() => {
-    requestNotificationsPermission();
-
     getFirebaseToken();
   }, []);
-  
+
   return (
     <ErrorBoundary FallbackComponent={CustomFallback}>
       <Provider store={appStore}>
         <PersistGate loading={null} persistor={persistor}>
           <SafeAreaView style={styles.safeArea}>
             <StatusBar />
-            <ScrollView contentContainerStyle={styles.scrollView}>
-              <Notifications />
-              <MenuWrapperComponent />
-            </ScrollView>
+            <Notifications />
+            <MenuWrapperComponent />
           </SafeAreaView>
         </PersistGate>
       </Provider>

@@ -6,6 +6,7 @@ import useMenuStyles from './useMenuStyle';
 import { TabNavigator } from './TabNavigator';
 import { AppState } from '@ourtypes/AppState';
 import { UserSelection } from '@components/user/UserSelection';
+import { Notifications } from 'src/commom/notifications/Notifications';
 
 export const MenuWrapperComponent = () => {
   const styles = useMenuStyles();
@@ -16,7 +17,7 @@ export const MenuWrapperComponent = () => {
   return (
     <View style={styles.safeArea}>
       <NavigationContainer ref={navigationRef}>
-        {isLoggedIn ? <TabNavigator /> : <UserSelection />}
+        {isLoggedIn ?<TabNavigator />: <UserSelection />}
       </NavigationContainer>
     </View>
   );
