@@ -28,6 +28,8 @@ export const theme = {
     forestGreen: '#417C3D',
     blue: '#0059A7',
     green: '#00703C',
+    bgBlue: '#83d2f3',
+    lightBlue: '#c6e5f2'
   },
   fontWeight: {
     bold: 'bold',
