@@ -21,6 +21,7 @@ export const DisplaySessions:React.FC<DisplaySessionsType> = ({sessions, loggedI
     
         return (
           <TouchableOpacity onPress={() => handleSessionClick(item.sessionId)} style={homeScreenStyles.card}>
+            <View style={homeScreenStyles.card1}>
             <View style={homeScreenStyles.cardHeader}>
               <Text style={homeScreenStyles.sessionTitle} numberOfLines={1} ellipsizeMode="tail">
                 {item.sessionTitle}
@@ -37,6 +38,7 @@ export const DisplaySessions:React.FC<DisplaySessionsType> = ({sessions, loggedI
             <View style={homeScreenStyles.iconTextRow}>
               <MaterialIcons name="location-on" size={18} color={theme.colors.grey} />
               <Text style={homeScreenStyles.text}> {item.location} | {item.sessionMembers.length} / {item.participantLimit} Enrolled</Text>
+            </View>
             </View>
           </TouchableOpacity>
         );

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '@store/appSilce';
+import { loginUser } from '@store/appSlice';
 import { AppState } from '@ourtypes/AppState';
 import { loginStyles } from './loginStyles';
 import { SelectionType } from './UserSelection';

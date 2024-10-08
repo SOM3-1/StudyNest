@@ -1,24 +1,23 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 const Stack = createStackNavigator();
-import { Home } from '@components/home/Home';
 import { headerLeft, headerOptions, } from '@constants/menuConstants';
-import { Profile } from '@components/profile/Profile';
+import { UserDashBoard } from '@components/dashboard/UserDashBoard';
 
-export const ProfileNavigator: React.FC = () => {
+export const DashboardNavigator: React.FC = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="ProfileNavigator"
+      initialRouteName="UserDashboard"
       screenOptions={{
         ...headerOptions,
       }}>
       <Stack.Screen
-        name="account"
-        component={Profile}
+        name="dashboard"
+        component={UserDashBoard}
         options={{
             ...headerOptions,
-          headerTitle: 'Profile',
+          headerTitle: 'Dashboard',
           ...headerLeft,
         }}
       />

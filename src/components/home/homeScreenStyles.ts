@@ -5,22 +5,29 @@ export const homeScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: theme.colors.offWhite, // Use theme color
+    backgroundColor: theme.colors.offWhite,
   },
   card: {
-    backgroundColor: theme.colors.white, // Use theme color
-    borderRadius: 8,
-    padding: 12,
+    backgroundColor: theme.colors.lightBlue,
+    borderRadius: 16,
+    padding: 8,
     marginBottom: 12,
-    shadowColor: theme.colors.shadowColor, // Use theme shadow color
+    shadowColor: theme.colors.shadowColor,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 3,
     borderWidth: 2, 
-    borderColor: theme.colors.borderGrey, // Outer border
+    borderColor: theme.colors.bgBlue,
     borderBottomWidth: theme.borderBottom.thick,
     position: 'relative',
+  },
+  card1: {
+    backgroundColor: theme.colors.white,
+    borderRadius: 8,
+    padding: 12,
+    borderWidth: 2,
+    borderColor: theme.colors.bgBlue,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -29,15 +36,15 @@ export const homeScreenStyles = StyleSheet.create({
     marginBottom: 8,
   },
   sessionTitle: {
-    fontSize: theme.fontSize.large, // Use theme font size
-    fontWeight: theme.fontWeight.bold, // Use theme font weight
-    color: theme.colors.darkGrey, // Use theme color
+    fontSize: theme.fontSize.large,
+    fontWeight: theme.fontWeight.bold,
+    color: theme.colors.darkGrey,
     maxWidth: '85%',
   },
   text: {
-    fontSize: theme.fontSize.default, // Use theme font size
-    color: theme.colors.grey, // Use theme color
-    marginLeft: 5, // To give spacing after the icon
+    fontSize: theme.fontSize.default,
+    color: theme.colors.grey,
+    marginLeft: 5,
   },
   iconTextRow: {
     flexDirection: 'row',
