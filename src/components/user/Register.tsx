@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '@store/appSilce';
+import { registerUser } from '@store/appSlice';
 import { AppState } from '@ourtypes/AppState';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { generateUUID } from '@components/helpers/uuidGenerator';

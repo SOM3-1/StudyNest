@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { appReducer } from "./appSilce";
+import { appReducer } from "./appSlice";
 import { persistStore } from "redux-persist";
 
 const appStore  = configureStore({

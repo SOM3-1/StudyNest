@@ -54,6 +54,7 @@ const slice = createSlice({
       state.isLoggedIn = false;
       state.loggedInUser = undefined;
     },
+    
     addStudySession: (state, action: PayloadAction<{ sessionTitle: string; description: string; date: string; from: string; to: string; location: string; major: string; participantLimit: number }>) => {
       const { sessionTitle, description, date, from, to, location, major } = action.payload;
       if (state.loggedInUser) {
