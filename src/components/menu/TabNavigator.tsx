@@ -4,8 +4,9 @@ import React from 'react';
 import { CustomTabBar } from './CustomTabBar';
 import { theme } from 'src/utils/theme';
 import { menuStyles } from './menuStyles';
-import { HomeNavigator } from '@components/Navigators/HomeNavigator';
-import { ProfileNavigator } from '@components/Navigators/ProfileNavigator';
+import { HomeNavigator } from '@components/navigators/HomeNavigator';
+import { ProfileNavigator } from '@components/navigators/ProfileNavigator';
+import { DashboardNavigator } from '@components/navigators/DashboardNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,14 +41,14 @@ export const TabNavigator = () => {
       />
 
       <Tab.Screen
-        name="HomeNavigator2"
-        component={HomeNavigator}
+        name="DashboardNavigator"
+        component={DashboardNavigator}
         options={{title: 'dashboard', headerTitle: 'Dashboard'}}
         listeners={tabPressListener}
       />
 
       <Tab.Screen
-        name="Profile"
+        name="ProfileNavigator"
         component={ProfileNavigator}
         options={{title: 'person', headerTitle: 'Account'}}
         listeners={tabPressListener}

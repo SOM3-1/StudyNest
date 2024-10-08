@@ -12,6 +12,7 @@ export interface User {
     email: string;
     major: string;
     password: string;
-    iD: string
+    iD: string,
+    sessions: string[];
   }
   
