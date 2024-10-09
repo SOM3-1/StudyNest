@@ -25,17 +25,15 @@ export const getAvailableAndSortedSessions = (sessions: Session[]): Session[] =>
 
 export const getAvailableSessionsForDashboard = (sessions: Session[]): Session[] => {
   const now = DateTime.now();
-  const nowMinus30 = now.minus({ minutes: 30 });
   const sevenDaysAgo = now.minus({ days: 7 });
 
   const availableSessions = sessions.filter(session => {
-    const sessionEndTime = DateTime.fromISO(`${session.date}T${session.to}`);
     const sessionStartTime = DateTime.fromISO(`${session.date}T${session.from}`);
+    const sessionEndTime = DateTime.fromISO(`${session.date}T${session.to}`);
 
-    const isSessionInFuture = sessionEndTime > nowMinus30;
-    const isWithinPastSevenDays = sessionStartTime >= sevenDaysAgo;
+    const isSessionInFutureOrPastSevenDays = sessionStartTime >= sevenDaysAgo || sessionEndTime > now;
 
-    return isSessionInFuture && isWithinPastSevenDays;
+    return isSessionInFutureOrPastSevenDays;
   });
 
   const sortedSessions = [...availableSessions].sort((a, b) => {
