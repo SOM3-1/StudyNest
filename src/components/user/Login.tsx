@@ -8,6 +8,7 @@ import { loginStyles } from './loginStyles';
 import { SelectionType } from './UserSelection';
 import { registrationStyles } from './registrationStyles';
 import { log } from '@services/Logger';
+import CustomTextInput from 'src/commom/CustomTextInput';
 
 export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> = ({ handleSelection }) => {
   const [email, setEmail] = useState('');
@@ -64,7 +65,7 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
 
       <View style={[loginStyles.inputContainer, error.includes('Invalid email format') && loginStyles.errorBorder]}>
         <Icon name="email" size={20} color="#000" style={loginStyles.icon} />
-        <TextInput
+        <CustomTextInput
           style={loginStyles.input}
           placeholder="Email"
           keyboardType="email-address"
@@ -76,7 +77,7 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
 
       <View style={loginStyles.inputContainer}>
         <Icon name="lock" size={20} color="#000" style={loginStyles.icon} />
-        <TextInput
+        <CustomTextInput
           style={loginStyles.input}
           placeholder="Password"
           secureTextEntry

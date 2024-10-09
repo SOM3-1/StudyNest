@@ -4,6 +4,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
 import { DateTime } from 'luxon';
 import { homeScreenStyles } from '@components/home/homeScreenStyles';
+import CustomTextInput from 'src/commom/CustomTextInput';
 
 interface FilterSessionsProps {
   onSearch: (searchTerm: string, selectedDate: string | null) => void;
@@ -45,7 +46,7 @@ export const FilterSessions: React.FC<FilterSessionsProps> = ({ onSearch, search
 
   return (
     <View style={homeScreenStyles.filterContainer}>
-      <TextInput
+      <CustomTextInput
         style={homeScreenStyles.input}
         placeholder="Search by title, major, location..."
         value={searchInput} 
@@ -53,7 +54,7 @@ export const FilterSessions: React.FC<FilterSessionsProps> = ({ onSearch, search
       />
 
       <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-        <MaterialIcons name="calendar-today" size={30} color="black" />
+        <MaterialIcons name="calendar-month" size={30} color="black" />
       </TouchableOpacity>
 
       {showDatePicker && (

@@ -1,16 +1,19 @@
 import { StyleSheet } from "react-native";
+import { theme } from "src/utils/theme";
 
 export const loginStyles = StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: 'center',
       padding: 20,
+      backgroundColor:  theme.colors.white
     },
     header: {
       fontSize: 24,
       fontWeight: 'bold',
       marginBottom: 20,
       textAlign: 'center',
+      color: theme.colors.darkGrey
     },
     inputContainer: {
       flexDirection: 'row',
@@ -25,6 +28,7 @@ export const loginStyles = StyleSheet.create({
     input: {
       flex: 1,
       fontSize: 16,
+      color: theme.colors.black
     },
     button: {
       backgroundColor: '#007bff',

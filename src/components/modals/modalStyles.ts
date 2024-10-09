@@ -19,6 +19,7 @@ export const modalStyles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 20,
+        color: theme.colors.darkGrey
     },
     input: {
         height: 40,
@@ -27,6 +28,9 @@ export const modalStyles = StyleSheet.create({
         marginBottom: 15,
         paddingHorizontal: 10,
         justifyContent: 'center',
+        borderRadius: 10,
+        color: theme.colors.grey
+
     },
     pickerContainer: {
         borderColor: theme.colors.grey,
@@ -36,6 +40,8 @@ export const modalStyles = StyleSheet.create({
     },
     picker: {
         height: 40,
+        justifyContent: 'center',marginBottom: 10
+
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -64,8 +70,12 @@ export const modalStyles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
     },
-    pickerLabel: {
-        fontSize: 16,
-        marginBottom: 5,
+    label: {
+        fontSize: 16, marginLeft: 2,
+        marginBottom: 6,
+        color: theme.colors.grey
     },
+    pickerTextStyle: {
+        color: theme.colors.darkGrey
+    }
 });

@@ -37,5 +37,8 @@ export const menuStyles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 5,
     paddingVertical: 5,
+    color: theme.colors.darkGrey,
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
