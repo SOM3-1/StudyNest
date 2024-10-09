@@ -9,6 +9,7 @@ import { DateTime } from 'luxon';
 import { requestNotificationsPermission } from '@services/notifications/notificationPermissionService';
 import { FilterSessions } from '@components/filter/FilterSessions';
 import { theme } from 'src/utils/theme';
+import { AddButton } from './AddButton';
 
 export const Home: React.FC = () => {
   const sessions = useSelector((state: AppState) => state.sessions);
@@ -86,6 +87,7 @@ export const Home: React.FC = () => {
           <Text style={homeScreenStyles.noSessionsText}>No sessions available</Text>
         </View>
       )}
+      <AddButton />
     </View>
   );
 };
