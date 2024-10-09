@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from '@ourtypes/AppState';
 import { DisplaySessions } from '@components/home/DisplaySessions';
 import { getAvailableSessionsForDashboard } from '@components/helpers/sessionUtils';
+import { homeScreenStyles } from '@components/home/homeScreenStyles';
 
 export const UserDashBoard: React.FC = () => {
   const sessions = useSelector((state: AppState) => state.sessions);
@@ -18,7 +19,6 @@ export const UserDashBoard: React.FC = () => {
   }
 
   const createdSessions = sessions.filter(session => session.createdBy === loggedInUser.iD);
-  console.log("createdSessions", createdSessions)
 
   const joinedSessions = sessions.filter(session => session.sessionMembers.includes(loggedInUser.iD));
 
@@ -30,12 +30,12 @@ export const UserDashBoard: React.FC = () => {
   const sortedSessions = getAvailableSessionsForDashboard(combinedSessions);
   
   return (
-    <>
+    <View style={homeScreenStyles.container}>
       {combinedSessions.length > 0 ? (
         <DisplaySessions sessions={sortedSessions} loggedInUser={loggedInUser} />
       ) : (
         <Text>No sessions available</Text> 
       )}
-    </>
+    </View>
   );
 };
