@@ -3,8 +3,9 @@ import { TouchableOpacity, View, Text, FlatList } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { theme } from "src/utils/theme";
 import { homeScreenStyles } from "./homeScreenStyles";
-import { useSelector } from "react-redux";
-import { AppState, User } from "@ourtypes/AppState";
+import { User } from "@ourtypes/AppState";
+import { ViewSessionDetails } from "@components/modals/ViewSessionDetails";
+import { useState } from "react";
 
 interface DisplaySessionsType {
   sessions: Session[],
@@ -12,15 +13,26 @@ interface DisplaySessionsType {
 }
 export const DisplaySessions: React.FC<DisplaySessionsType> = ({ sessions, loggedInUser }) => {
 
-  const handleSessionClick = (session: any) => {
-    console.log('Session clicked:', session);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentSession, setCurrentSession] = useState<Session | null>(null)
+  const [isCreator, setIsCreator] = useState<boolean>(false);
+
+  const openModal = (session: Session) => {
+    setIsModalVisible(true);
+    setCurrentSession(session);
+    setIsCreator(session.createdBy === loggedInUser?.iD);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setCurrentSession(null)
   };
 
   const renderSessionCard = ({ item }: { item: Session }) => {
     const isOwner = item.createdBy === loggedInUser?.iD;
 
     return (
-      <TouchableOpacity onPress={() => handleSessionClick(item)} style={homeScreenStyles.card}>
+      <TouchableOpacity onPress={() => openModal(item)} style={homeScreenStyles.card}>
         <View style={homeScreenStyles.card1}>
           <View style={homeScreenStyles.cardHeader}>
             <Text style={homeScreenStyles.sessionTitle} numberOfLines={1} ellipsizeMode="tail">
@@ -43,9 +55,11 @@ export const DisplaySessions: React.FC<DisplaySessionsType> = ({ sessions, logge
       </TouchableOpacity>
     );
   };
-  return (<FlatList
-      data={sessions}
-      keyExtractor={(item) => item.sessionId}
-      renderItem={renderSessionCard}
-    />)
+  return (<><FlatList
+    data={sessions}
+    keyExtractor={(item) => item.sessionId}
+    renderItem={renderSessionCard}
+  />
+    <ViewSessionDetails isVisible={isModalVisible} onClose={closeModal} sessionData={currentSession} isOwner={isCreator}/>
+  </>)
 }
