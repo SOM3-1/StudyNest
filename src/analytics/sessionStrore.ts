@@ -4,7 +4,9 @@ import { log } from '@services/Logger';
 
 export const saveSessionToFirestore = async (session: Session): Promise<void> => {
     try {
+      
       await firestore().collection('sessions').doc(session.sessionId).set(session);
+
       log.info(`Session saved to Firestore: ${session}`);
     } catch (error) {
       log.error('Error saving session to Firestore:', error);

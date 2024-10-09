@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { View, TextInput, Modal, Text, TouchableOpacity, Alert, ToastAndroid, Dimensions } from 'react-native';
+import { View, TextInput, Modal, Text, TouchableOpacity, Alert, ToastAndroid } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { addStudySession } from '@store/appSlice';
 import { DateTime } from 'luxon';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-import { theme } from 'src/utils/theme';
 import { UTA_LOCATIONS } from '@components/helpers/createSessions';
 import { MAJORS } from '@constants/majors';
 import { modalStyles } from './modalStyles';
@@ -26,7 +25,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
     const [showFromTimePicker, setShowFromTimePicker] = useState(false);
     const [showToTimePicker, setShowToTimePicker] = useState(false);
 
-    const isFormValid = sessionTitle && description && from && to && location && major && participantLimit >= 2;
+    const isFormValid = sessionTitle && from && to && location && major && participantLimit >= 2;
 
     const clearFields = () => {
         setSessionTitle('');
@@ -115,28 +114,37 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                         />
                     )}
 
-                    <TouchableOpacity onPress={() => setShowFromTimePicker(true)} style={modalStyles.input}>
-                        <Text>{from || "Select From Time"}</Text>
-                    </TouchableOpacity>
-                    {showFromTimePicker && (
-                        <DateTimePicker
-                            value={new Date()}
-                            mode="time"
-                            display="default"
-                            onChange={(event, selectedTime) => {
-                                setShowFromTimePicker(false);
-                                if (selectedTime) {
-                                    const formattedTime = DateTime.fromJSDate(selectedTime).toFormat('HH:mm');
-                                    const now = DateTime.now().toFormat('HH:mm');
-                                    if (formattedTime >= now) {
-                                        setFrom(formattedTime);
-                                    } else {
-                                        ToastAndroid.show('From time cannot be in the past.', ToastAndroid.LONG);
-                                    }
-                                }
-                            }}
-                        />
-                    )}
+<TouchableOpacity onPress={() => setShowFromTimePicker(true)} style={modalStyles.input}>
+  <Text>{from || "Select From Time"}</Text>
+</TouchableOpacity>
+{showFromTimePicker && (
+  <DateTimePicker
+    value={new Date()}
+    mode="time"
+    display="default"
+    onChange={(event, selectedTime) => {
+      setShowFromTimePicker(false);
+      if (selectedTime) {
+        const formattedTime = DateTime.fromJSDate(selectedTime).toFormat('HH:mm');
+        const now = DateTime.now();
+        const selectedDate = DateTime.fromISO(sessionStart); // Date from the date picker
+
+        if (selectedDate.hasSame(now, 'day')) {
+          // If the selected date is today, restrict time selection based on current time
+          const currentTime = now.toFormat('HH:mm');
+          if (formattedTime >= currentTime) {
+            setFrom(formattedTime);
+          } else {
+            ToastAndroid.show('From time cannot be in the past.', ToastAndroid.LONG);
+          }
+        } else {
+          // If the selected date is in the future, no time restriction
+          setFrom(formattedTime);
+        }
+      }
+    }}
+  />
+)}
 
                     <TouchableOpacity onPress={() => setShowToTimePicker(true)} style={modalStyles.input}>
                         <Text>{to || "Select To Time"}</Text>
