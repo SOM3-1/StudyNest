@@ -120,7 +120,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                     </TouchableOpacity>
                     {showFromTimePicker && (
                         <DateTimePicker
-                            value={new Date()} 
+                            value={new Date()}
                             mode="time"
                             display="default"
                             onChange={(event, selectedTime) => {
@@ -167,10 +167,9 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                         <Picker
                             selectedValue={location}
                             onValueChange={(itemValue) => setLocation(itemValue)}
-                            style={modalStyles.picker}
                         >
                             {UTA_LOCATIONS.map((loc) => (
-                                <Picker.Item key={loc} label={loc} value={loc} />
+                                <Picker.Item key={loc.value} label={loc.label} value={loc.value} />
                             ))}
                         </Picker>
                     </View>
@@ -181,8 +180,8 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                             onValueChange={(itemValue) => setMajor(itemValue)}
                             style={modalStyles.picker}
                         >
-                            {MAJORS.map((major) => (
-                                <Picker.Item key={major.value} label={major.label} value={major.value} />
+                            {MAJORS.map((majorItem) => (
+                                <Picker.Item key={majorItem.value} label={majorItem.label} value={majorItem.value} />
                             ))}
                         </Picker>
                     </View>

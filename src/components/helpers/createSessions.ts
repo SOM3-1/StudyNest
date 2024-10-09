@@ -3,40 +3,43 @@ import { dummyUsers } from "@constants/users";
 import { generateUUID } from "./uuidGenerator";
 import { DateTime } from 'luxon';
 import { trackSessionCreation } from "src/analytics/trackEvent";
+import { PickerTypes } from "@ourtypes/pickerTypes";
 
-export const UTA_LOCATIONS = [
-    'The Commons', 
-    'University Center', 
-    'Library', 
-    'Science Hall', 
-    'Nedderman Hall', 
-    'College Park Center',
-    'Arlington Hall', 
-    'Kalpana Chawla Hall', 
-    'Vandergriff Hall', 
-    'Arbor Oaks Club house',
-    'Timber Brook Apartments',
-    'The Lofts',
-    'The Arlie Apartments',
-    'Teams Online Meeting', 
+export const UTA_LOCATIONS: PickerTypes[] = [
+    { label: 'Select Location', value: '' },
+    { label: 'The Commons', value: 'The Commons' },
+    { label: 'University Center', value: 'University Center' },
+    { label: 'Library', value: 'Library' },
+    { label: 'Science Hall', value: 'Science Hall' },
+    { label: 'Nedderman Hall', value: 'Nedderman Hall' },
+    { label: 'College Park Center', value: 'College Park Center' },
+    { label: 'Arlington Hall', value: 'Arlington Hall' },
+    { label: 'Kalpana Chawla Hall', value: 'Kalpana Chawla Hall' },
+    { label: 'Vandergriff Hall', value: 'Vandergriff Hall' },
+    { label: 'Arbor Oaks Club house', value: 'Arbor Oaks Club house' },
+    { label: 'Timber Brook Apartments', value: 'Timber Brook Apartments' },
+    { label: 'The Lofts', value: 'The Lofts' },
+    { label: 'The Arlie Apartments', value: 'The Arlie Apartments' },
+    { label: 'Teams Online Meeting', value: 'Teams Online Meeting' },
 ];
+
 
 export const generateRandomSessions = (): Session[] => {
     const sessions: Session[] = [];
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     const weekends = ['Saturday', 'Sunday'];
-  
+
     const getRandomUsers = (count: number): string[] => {
         const shuffledUsers = [...dummyUsers].sort(() => 0.5 - Math.random());
         return shuffledUsers.slice(0, count).map(user => user.iD);
     };
 
-    const totalDays = 6; 
+    const totalDays = 6;
     const minSessionsPerDay = 3;
     const maxSessionsPerDay = 4;
 
     for (let day = 0; day < totalDays; day++) {
-        const currentDay = DateTime.now().plus({ days: day }); 
+        const currentDay = DateTime.now().plus({ days: day });
         const sessionsToday = Math.floor(Math.random() * (maxSessionsPerDay - minSessionsPerDay + 1)) + minSessionsPerDay;
 
         for (let i = 0; i < sessionsToday; i++) {
@@ -56,7 +59,7 @@ export const generateRandomSessions = (): Session[] => {
             const creator = dummyUsers[Math.floor(Math.random() * dummyUsers.length)];
             const participantCount = Math.floor(Math.random() * 7) + 2;
 
-            const location = UTA_LOCATIONS[Math.floor(Math.random() * UTA_LOCATIONS.length)];
+            const location = UTA_LOCATIONS[Math.floor(Math.random() * (UTA_LOCATIONS.length - 1)) + 1];
 
             const session: Session = {
                 sessionId: generateUUID(),
@@ -65,7 +68,7 @@ export const generateRandomSessions = (): Session[] => {
                 date: sessionStart.toISODate(),
                 from: sessionStart.toFormat('HH:mm'),
                 to: sessionEnd.toFormat('HH:mm'),
-                location: location,
+                location: location.value,
                 major: creator.major,
                 participantLimit: 8,
                 createdBy: creator.iD,
