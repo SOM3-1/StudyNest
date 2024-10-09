@@ -21,6 +21,9 @@ export const modalStyles = StyleSheet.create({
         marginBottom: 20,
         color: theme.colors.darkGrey
     },
+    capitalize: {
+      textTransform: 'capitalize',
+    },
     input: {
         height: 40,
         borderColor: theme.colors.grey,
@@ -77,5 +80,44 @@ export const modalStyles = StyleSheet.create({
     },
     pickerTextStyle: {
         color: theme.colors.darkGrey
-    }
+    },
+    ownerText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: theme.colors.primary,
+        marginTop: 10,
+      },text: {
+        fontSize: 16,
+        color: theme.colors.darkGrey,
+        marginBottom: 10,
+        lineHeight: 22, 
+      },
+      row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+      },
+      leftLabel: {
+        fontSize: 16,
+        color: theme.colors.grey,
+        fontWeight: 'bold',
+      },
+      rightLabel: {
+        fontSize: 16,
+        color: theme.colors.grey,
+        fontWeight: 'bold',
+      },
+      leftText: {
+        fontSize: 16,
+        color: theme.colors.darkGreen,
+      },
+      rightText: {
+        fontSize: 16,
+        color: theme.colors.darkGreen,
+      },
+      closeButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 20,
+    },
 });
