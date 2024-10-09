@@ -19,7 +19,6 @@ export const UserDashBoard: React.FC = () => {
   }
 
   const createdSessions = sessions.filter(session => session.createdBy === loggedInUser.iD);
-  console.log(createdSessions)
 
   const joinedSessions = sessions.filter(session => session.sessionMembers.includes(loggedInUser.iD));
 
