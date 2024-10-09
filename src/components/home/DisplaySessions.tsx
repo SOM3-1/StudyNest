@@ -43,11 +43,9 @@ export const DisplaySessions: React.FC<DisplaySessionsType> = ({ sessions, logge
       </TouchableOpacity>
     );
   };
-  return (
-    <View style={homeScreenStyles.container}><FlatList
+  return (<FlatList
       data={sessions}
       keyExtractor={(item) => item.sessionId}
       renderItem={renderSessionCard}
-    />
-    </View>)
+    />)
 }

@@ -67,10 +67,9 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
       const newUser = { fullName, email, major, password, iD: generateUUID() };
       dispatch(registerUser(newUser));
 
-      // Reset fields after registration
       setFullName('');
       setEmail('');
-      setMajor(''); // Reset major to show "Select Major"
+      setMajor(''); 
       setPassword('');
     } catch (err) {
       setError('An error occurred during registration');

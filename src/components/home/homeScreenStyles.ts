@@ -5,7 +5,7 @@ export const homeScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: theme.colors.offWhite,
+    backgroundColor: theme.colors.white,
   },
   card: {
     backgroundColor: theme.colors.lightBlue,
@@ -50,5 +50,50 @@ export const homeScreenStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 4,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+    padding: 8,
+    backgroundColor: theme.colors.white,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: theme.colors.bgBlue,
+  },
+  input: { 
+    flex: 1, 
+    height: 40,
+    paddingHorizontal: 10,
+    backgroundColor: theme.colors.offWhite,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: theme.colors.grey,
+    marginRight: 10,
+    color: theme.colors.black
+  }, 
+  clearButton: {
+    alignSelf: 'center', 
+    height: 40
+  },
+  clearButtonText: {
+    textDecorationLine: 'underline',
+    color: theme.colors.blue,  
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  highlightedButton: {
+    color: theme.colors.accent, 
+  },
+  noSessionsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noSessionsText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: theme.colors.grey,
   },
 });
