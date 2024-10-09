@@ -43,7 +43,7 @@ export const homeScreenStyles = StyleSheet.create({
   },
   text: {
     fontSize: theme.fontSize.default,
-    color: theme.colors.grey,
+    color: theme.colors.darkGreen,
     marginLeft: 5,
   },
   iconTextRow: {

@@ -17,8 +17,8 @@ export const CustomTabLabel: React.FC<{
       ]}>
       <Icon
         name={iconSource}
-        size={isFocused ? 24 : 20} 
-        color={isFocused ? theme.colors.red : theme.colors.white}
+        size={isFocused ? 26 : 26} 
+        color={isFocused ? theme.colors.darkGrey : theme.colors.white}
       />
       {isFocused && (
         <Text

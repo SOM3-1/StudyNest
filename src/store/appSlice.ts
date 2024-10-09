@@ -59,7 +59,7 @@ const slice = createSlice({
     },
     
     addStudySession: (state, action: PayloadAction<{ sessionTitle: string; description: string; date: string; from: string; to: string; location: string; major: string; participantLimit: number }>) => {
-      const { sessionTitle, description, date, from, to, location, major } = action.payload;
+      const { sessionTitle, description, date, from, to, location, major, participantLimit } = action.payload;
       if (state.loggedInUser) {
 
         const user = state.users.find(user => user.iD === state.loggedInUser?.iD);
@@ -74,7 +74,7 @@ const slice = createSlice({
           to,
           location,
           major,
-          participantLimit: 2,
+          participantLimit,
           createdBy: state.loggedInUser.iD,
           sessionMembers: []
         };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Modal, Text, TouchableOpacity, Alert, ToastAndroid } from 'react-native';
+import { View, Modal, Text, TouchableOpacity, Alert, ToastAndroid } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { addStudySession } from '@store/appSlice';
 import { DateTime } from 'luxon';
@@ -8,6 +8,8 @@ import { Picker } from '@react-native-picker/picker';
 import { UTA_LOCATIONS } from '@components/helpers/createSessions';
 import { MAJORS } from '@constants/majors';
 import { modalStyles } from './modalStyles';
+import CustomTextInput from 'src/commom/CustomTextInput';
+import { theme } from 'src/utils/theme';
 
 
 export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => void }> = ({ isVisible, onClose }) => {
@@ -87,67 +89,71 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
             <View style={modalStyles.modalBackground}>
                 <View style={modalStyles.modalContainer}>
                     <Text style={modalStyles.modalTitle}>Create a New Study Session</Text>
-
-                    <TextInput
+                    <Text style={modalStyles.label}>Session Title</Text>
+                    <CustomTextInput
                         placeholder="Session Title"
                         value={sessionTitle}
                         onChangeText={setSessionTitle}
                         style={modalStyles.input}
                     />
-                    <TextInput
+                    <Text style={modalStyles.label}>Description</Text>
+                    <CustomTextInput
                         placeholder="Description"
                         value={description}
                         onChangeText={setDescription}
                         style={modalStyles.input}
                     />
-
+                    <Text style={modalStyles.label}>Date</Text>
                     <TouchableOpacity onPress={() => setShowDatePicker(true)} style={modalStyles.input}>
-                        <Text>{sessionStart}</Text>
+                        <Text style={modalStyles.pickerTextStyle}>{sessionStart}</Text>
                     </TouchableOpacity>
                     {showDatePicker && (
                         <DateTimePicker
                             value={DateTime.fromISO(sessionStart).toJSDate()}
                             mode="date"
                             display="default"
+                            accentColor={theme.colors.blue}
+                            textColor="white"
                             onChange={handleDateChange}
                             minimumDate={new Date()}
                         />
                     )}
+                    <Text style={modalStyles.label}>From</Text>
+                    <TouchableOpacity onPress={() => setShowFromTimePicker(true)} style={modalStyles.input}>
+                        <Text style={modalStyles.pickerTextStyle}>{from || "Select From Time"}</Text>
+                    </TouchableOpacity>
+                    {showFromTimePicker && (
+                        <DateTimePicker
+                            value={new Date()}
+                            mode="time"
+                            display="default"
+                            textColor="white"
+                            onChange={(event, selectedTime) => {
+                                setShowFromTimePicker(false);
+                                if (selectedTime) {
+                                    const formattedTime = DateTime.fromJSDate(selectedTime).toFormat('HH:mm');
+                                    const now = DateTime.now();
+                                    const selectedDate = DateTime.fromISO(sessionStart);
 
-<TouchableOpacity onPress={() => setShowFromTimePicker(true)} style={modalStyles.input}>
-  <Text>{from || "Select From Time"}</Text>
-</TouchableOpacity>
-{showFromTimePicker && (
-  <DateTimePicker
-    value={new Date()}
-    mode="time"
-    display="default"
-    onChange={(event, selectedTime) => {
-      setShowFromTimePicker(false);
-      if (selectedTime) {
-        const formattedTime = DateTime.fromJSDate(selectedTime).toFormat('HH:mm');
-        const now = DateTime.now();
-        const selectedDate = DateTime.fromISO(sessionStart); // Date from the date picker
-
-        if (selectedDate.hasSame(now, 'day')) {
-          // If the selected date is today, restrict time selection based on current time
-          const currentTime = now.toFormat('HH:mm');
-          if (formattedTime >= currentTime) {
-            setFrom(formattedTime);
-          } else {
-            ToastAndroid.show('From time cannot be in the past.', ToastAndroid.LONG);
-          }
-        } else {
-          // If the selected date is in the future, no time restriction
-          setFrom(formattedTime);
-        }
-      }
-    }}
-  />
-)}
-
+                                    if (selectedDate.hasSame(now, 'day')) {
+                                        // If the selected date is today, restrict time selection based on current time
+                                        const currentTime = now.toFormat('HH:mm');
+                                        if (formattedTime >= currentTime) {
+                                            setFrom(formattedTime);
+                                        } else {
+                                            ToastAndroid.show('From time cannot be in the past.', ToastAndroid.LONG);
+                                        }
+                                    } else {
+                                        // If the selected date is in the future, no time restriction
+                                        setFrom(formattedTime);
+                                    }
+                                }
+                            }}
+                        />
+                    )}
+                    <Text style={modalStyles.label}>To</Text>
                     <TouchableOpacity onPress={() => setShowToTimePicker(true)} style={modalStyles.input}>
-                        <Text>{to || "Select To Time"}</Text>
+                        <Text style={modalStyles.pickerTextStyle}>{to || "Select To Time"}</Text>
                     </TouchableOpacity>
                     {showToTimePicker && (
                         <DateTimePicker
@@ -170,35 +176,39 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                         />
                     )}
 
-                    <Text style={modalStyles.pickerLabel}>Location</Text>
+                    <Text style={modalStyles.label}>Location</Text>
                     <View style={modalStyles.pickerContainer}>
                         <Picker
                             selectedValue={location}
                             onValueChange={(itemValue) => setLocation(itemValue)}
+                            style={{ color: theme.colors.darkGrey, ...modalStyles.picker }}
+                            dropdownIconColor={theme.colors.darkGrey}
                         >
                             {UTA_LOCATIONS.map((loc) => (
                                 <Picker.Item key={loc.value} label={loc.label} value={loc.value} />
                             ))}
                         </Picker>
                     </View>
-                    <Text style={modalStyles.pickerLabel}>Major</Text>
+                    <Text style={modalStyles.label}>Major</Text>
                     <View style={modalStyles.pickerContainer}>
                         <Picker
                             selectedValue={major}
                             onValueChange={(itemValue) => setMajor(itemValue)}
-                            style={modalStyles.picker}
+                            style={{ color: theme.colors.darkGrey, ...modalStyles.picker }}
+                            dropdownIconColor={theme.colors.darkGrey}
                         >
                             {MAJORS.map((majorItem) => (
                                 <Picker.Item key={majorItem.value} label={majorItem.label} value={majorItem.value} />
                             ))}
                         </Picker>
                     </View>
-
-                    <TextInput
+                    <Text style={modalStyles.label}>No. of participants</Text>
+                    <CustomTextInput
                         placeholder="Participant Limit"
                         value={participantLimit.toString()}
                         keyboardType="numeric"
                         onChangeText={(text) => {
+                            
                             const limit = Math.max(Number(text), 2);
                             setParticipantLimit(limit);
                         }}

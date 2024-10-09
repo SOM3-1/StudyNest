@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '@store/appSlice';
 import { AppState } from '@ourtypes/AppState';
@@ -10,6 +10,7 @@ import { SelectionType } from './UserSelection';
 import { Picker } from '@react-native-picker/picker';
 import { MAJORS } from '@constants/majors';
 import { log } from '@services/Logger';
+import CustomTextInput from 'src/commom/CustomTextInput';
 
 export const Register: React.FC<{ handleSelection: (val: SelectionType) => void }> = ({ handleSelection }) => {
   const [fullName, setFullName] = useState('');
@@ -87,7 +88,7 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
 
       <View style={registrationStyles.inputContainer}>
         <Icon name="person" size={20} color="#000" style={registrationStyles.icon} />
-        <TextInput
+        <CustomTextInput
           style={registrationStyles.input}
           placeholder="Full Name"
           value={fullName}
@@ -97,7 +98,7 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
 
       <View style={[registrationStyles.inputContainer, error.includes('Invalid email format') && registrationStyles.errorBorder]}>
         <Icon name="email" size={20} color="#000" style={registrationStyles.icon} />
-        <TextInput
+        <CustomTextInput
           style={registrationStyles.input}
           placeholder="Email"
           keyboardType="email-address"
@@ -125,7 +126,7 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
 
       <View style={[registrationStyles.inputContainer, error.includes('Password must be at least 8 characters') && registrationStyles.errorBorder]}>
         <Icon name="lock" size={20} color="#000" style={registrationStyles.icon} />
-        <TextInput
+        <CustomTextInput
           style={registrationStyles.input}
           placeholder="Password"
           secureTextEntry
