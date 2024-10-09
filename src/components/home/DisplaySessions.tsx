@@ -12,15 +12,15 @@ interface DisplaySessionsType {
 }
 export const DisplaySessions: React.FC<DisplaySessionsType> = ({ sessions, loggedInUser }) => {
 
-  const handleSessionClick = (sessionId: string) => {
-    console.log('Session clicked:', sessionId);
+  const handleSessionClick = (session: any) => {
+    console.log('Session clicked:', session);
   };
 
   const renderSessionCard = ({ item }: { item: Session }) => {
     const isOwner = item.createdBy === loggedInUser?.iD;
 
     return (
-      <TouchableOpacity onPress={() => handleSessionClick(item.sessionId)} style={homeScreenStyles.card}>
+      <TouchableOpacity onPress={() => handleSessionClick(item)} style={homeScreenStyles.card}>
         <View style={homeScreenStyles.card1}>
           <View style={homeScreenStyles.cardHeader}>
             <Text style={homeScreenStyles.sessionTitle} numberOfLines={1} ellipsizeMode="tail">
