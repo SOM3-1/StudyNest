@@ -14,27 +14,25 @@ interface FilterSessionsProps {
 export const FilterSessions: React.FC<FilterSessionsProps> = ({ onSearch, searchTerm, selectedDate }) => {
   const [searchInput, setSearchInput] = useState(searchTerm || '');
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setSearchInput(searchTerm); 
   }, [searchTerm]);
 
-  const debounceSearch = useCallback(
-    (text: string) => {
-      const handler = setTimeout(() => {
-        onSearch(text, selectedDate);
-      }, 500);
-
-      return () => {
-        clearTimeout(handler);
-      };
-    },
-    [selectedDate, onSearch]
-  );
 
   const handleSearchChange = (text: string) => {
-    setSearchInput(text);
-    debounceSearch(text);
+    setSearchInput(text); 
+
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout); 
+    }
+
+    const newTimeout = setTimeout(() => {
+      onSearch(text, selectedDate);
+    }, 500);
+
+    setDebounceTimeout(newTimeout); 
   };
 
   const handleDateChange = (event: any, date?: Date | null) => {

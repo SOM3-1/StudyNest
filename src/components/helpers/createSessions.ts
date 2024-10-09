@@ -5,7 +5,8 @@ import { DateTime } from 'luxon';
 import { trackSessionCreation } from "src/analytics/trackEvent";
 import { PickerTypes } from "@ourtypes/pickerTypes";
 
-export const UTA_LOCATIONS:PickerTypes[] = [
+export const UTA_LOCATIONS: PickerTypes[] = [
+    { label: 'Select Location', value: '' },
     { label: 'The Commons', value: 'The Commons' },
     { label: 'University Center', value: 'University Center' },
     { label: 'Library', value: 'Library' },
@@ -20,25 +21,25 @@ export const UTA_LOCATIONS:PickerTypes[] = [
     { label: 'The Lofts', value: 'The Lofts' },
     { label: 'The Arlie Apartments', value: 'The Arlie Apartments' },
     { label: 'Teams Online Meeting', value: 'Teams Online Meeting' },
-  ];
-  
+];
+
 
 export const generateRandomSessions = (): Session[] => {
     const sessions: Session[] = [];
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     const weekends = ['Saturday', 'Sunday'];
-  
+
     const getRandomUsers = (count: number): string[] => {
         const shuffledUsers = [...dummyUsers].sort(() => 0.5 - Math.random());
         return shuffledUsers.slice(0, count).map(user => user.iD);
     };
 
-    const totalDays = 6; 
+    const totalDays = 6;
     const minSessionsPerDay = 3;
     const maxSessionsPerDay = 4;
 
     for (let day = 0; day < totalDays; day++) {
-        const currentDay = DateTime.now().plus({ days: day }); 
+        const currentDay = DateTime.now().plus({ days: day });
         const sessionsToday = Math.floor(Math.random() * (maxSessionsPerDay - minSessionsPerDay + 1)) + minSessionsPerDay;
 
         for (let i = 0; i < sessionsToday; i++) {
@@ -58,7 +59,7 @@ export const generateRandomSessions = (): Session[] => {
             const creator = dummyUsers[Math.floor(Math.random() * dummyUsers.length)];
             const participantCount = Math.floor(Math.random() * 7) + 2;
 
-            const location = UTA_LOCATIONS[Math.floor(Math.random() * UTA_LOCATIONS.length)];
+            const location = UTA_LOCATIONS[Math.floor(Math.random() * (UTA_LOCATIONS.length - 1)) + 1];
 
             const session: Session = {
                 sessionId: generateUUID(),
