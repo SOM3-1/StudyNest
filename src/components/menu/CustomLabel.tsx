@@ -13,12 +13,12 @@ export const CustomTabLabel: React.FC<{
     <View
       style={[
         menuStyles.menuLabelContainer,
-        isFocused && { backgroundColor: theme.colors.white },
+        isFocused && {  },
       ]}>
       <Icon
         name={iconSource}
         size={isFocused ? 26 : 26} 
-        color={isFocused ? theme.colors.darkGrey : theme.colors.white}
+        color={isFocused ? theme.colors.white : theme.colors.black}
       />
       {isFocused && (
         <Text

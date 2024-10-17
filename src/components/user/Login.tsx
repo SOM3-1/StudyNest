@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ToastAndroid } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '@store/appSlice';
@@ -21,38 +21,48 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
   const validateEmail = (email: string) => {
     if (!/\S+@\S+\.\S+/.test(email)) {
       setError('Invalid email format');
-    } else {
-      setError(prev => prev === 'Invalid email format' ? '' : prev);
+      return false; 
     }
+    setError(''); 
+    return true;
   };
 
   const handleLogin = async () => {
+    setIsLoading(true);
     setError('');
 
     if (!email || !password) {
       setError('Email and password are required');
+      setIsLoading(false);
       return;
     }
 
-    validateEmail(email);
-
-    if (error) return;
-
-    setIsLoading(true);
+    if (!validateEmail(email)) {
+      setIsLoading(false); 
+      return;
+    }
 
     try {
-      const user = users.find(user => user.email === email && user.password === password);
-
+      const user = users.find(user => user.email.toLowerCase() === email.toLowerCase() && user.password === password);
       if (user) {
-        dispatch(loginUser({ email, password }));
+        setTimeout(() => {
+          dispatch(loginUser({ email, password }));
+          ToastAndroid.show('Logged in successfully!', ToastAndroid.SHORT);
+
+          setError('');
+          setIsLoading(false);
+        }, 1000);
+
         setError('');
       } else {
-        setError('Invalid email or password');
+        setTimeout(() => {
+          setError('Invalid email or password');
+          setIsLoading(false);
+        }, 1000)
       }
     } catch (err) {
       setError('An error occurred during login');
       log.error('Login error:', err);
-    } finally {
       setIsLoading(false);
     }
   };
@@ -87,7 +97,7 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
       </View>
 
       <TouchableOpacity
-        style={[loginStyles.button, (isLoading || !email || !password) && loginStyles.disabledButton]}
+        style={[loginStyles.button, (isLoading || !email || password.length<8) && loginStyles.disabledButton]}
         onPress={handleLogin}
         disabled={isLoading}
       >
@@ -107,4 +117,3 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
     </View>
   );
 };
-

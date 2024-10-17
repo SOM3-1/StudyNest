@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ToastAndroid } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '@store/appSlice';
 import { AppState } from '@ourtypes/AppState';
@@ -45,38 +45,49 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
   };
 
   const handleRegister = async () => {
+    setIsLoading(true);
     setError('');
     if (!fullName || !email || !major || !password) {
       setError('All fields are required');
+      setIsLoading(false);
       return;
     }
 
     if (!validateEmail(email) || !validatePassword(password)) {
+      setIsLoading(false);
       return;
     }
-
-    if (users.find(user => user.email === email)) {
+    const emailLower = email.toLowerCase();
+    if (users.find(user => user.email.toLowerCase() === emailLower)) {
       setError('Email is already registered');
+      setIsLoading(false);
       return;
     }
 
-    setIsLoading(true);
 
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      const newUser = { fullName, email, major, password, iD: generateUUID() };
-      dispatch(registerUser(newUser));
+      const newUser = { fullName, email: emailLower, major, password, iD: generateUUID() };
+      setTimeout(() => {
+        dispatch(registerUser(newUser));
+        ToastAndroid.show('User account created successfully!', ToastAndroid.SHORT);
 
-      setFullName('');
-      setEmail('');
-      setMajor(''); 
-      setPassword('');
+        setFullName('');
+        setEmail('');
+        setMajor('');
+        setPassword('');
+
+      }, 1000)
     } catch (err) {
-      setError('An error occurred during registration');
-      log.error('Registration error:', err);
+      setTimeout(() => {
+        setError('An error occurred during registration');
+        setIsLoading(false);
+        log.error('Registration error:', err);
+      }, 1000)
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);}, 1000)
     }
   };
 

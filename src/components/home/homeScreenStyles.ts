@@ -94,7 +94,7 @@ export const homeScreenStyles = StyleSheet.create({
   noSessionsText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: theme.colors.grey,
+    color: theme.colors.tealGrey,
   },
   floatingButton: {
     position: 'absolute',

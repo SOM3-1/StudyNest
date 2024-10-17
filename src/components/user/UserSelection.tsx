@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { View } from "react-native";
 import { Register } from "./Register";
 import { Login } from "./Login";
 
@@ -8,7 +7,7 @@ export enum SelectionType {
 }
 
 export const UserSelection: React.FC = () => {
-    const [selection, setSelection] = useState<SelectionType>(SelectionType.registration);
+    const [selection, setSelection] = useState<SelectionType>(SelectionType.login);
 
     const handleSelection = (val: SelectionType) => {
         setSelection(val)

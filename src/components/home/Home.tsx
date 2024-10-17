@@ -10,6 +10,7 @@ import { requestNotificationsPermission } from '@services/notifications/notifica
 import { FilterSessions } from '@components/filter/FilterSessions';
 import { theme } from 'src/utils/theme';
 import { AddButton } from './AddButton';
+import { NoSessions } from 'src/commom/NoSessions';
 
 export const Home: React.FC = () => {
   const sessions = useSelector((state: AppState) => state.sessions);
@@ -82,10 +83,7 @@ export const Home: React.FC = () => {
         <ActivityIndicator size="large" color={theme.colors.blue} />
       ) : filteredSessions.length > 0 ? (
         <DisplaySessions sessions={filteredSessions} loggedInUser={loggedInUser} />
-      ) : (
-        <View style={homeScreenStyles.noSessionsContainer}>
-          <Text style={homeScreenStyles.noSessionsText}>No sessions available</Text>
-        </View>
+      ) : (<NoSessions/>
       )}
       <AddButton />
     </View>

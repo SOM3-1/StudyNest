@@ -22,7 +22,7 @@ export const trackSessionCreation = (session: Session, fullName: string): void =
       .catch(error => {
         log.error(error);
       });
-      saveSessionToFirestore(session)
+      //saveSessionToFirestore(session)
   };
 
 export const trackSessionJoin = (sessionId: string, userId: string, fullName: string): void => {
