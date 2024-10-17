@@ -28,7 +28,7 @@ const slice = createSlice({
 
     registerUser: (state, action: PayloadAction<{ fullName: string; email: string; major: string; password: string, iD: string }>) => {
       const { email, fullName, major, password, iD } = action.payload;
-      const existingUser = state.users.find(user => user.email === email);
+      const existingUser = state.users.find(user => user.email.toLowerCase() === email.toLowerCase());
       if (!existingUser) {
         const newUser: User = {
           fullName,
@@ -46,7 +46,7 @@ const slice = createSlice({
 
     loginUser: (state, action: PayloadAction<{ email: string; password: string }>) => {
       const { email, password } = action.payload;
-      const user = state.users.find(user => user.email === email && user.password === password);
+      const user = state.users.find(user => user.email.toLowerCase() === email.toLowerCase() && user.password === password);
       if (user) {
         state.isLoggedIn = true;
         state.loggedInUser = user;
