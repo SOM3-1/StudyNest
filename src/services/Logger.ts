@@ -38,4 +38,8 @@ export class log {
   static error(...args: any) {
     this.logSingleton.error(...args);
   }
+
+  static warn(...args: any){
+    this.logSingleton.warn(...args);
+  }
 }

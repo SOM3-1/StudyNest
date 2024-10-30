@@ -1,9 +1,10 @@
 import React from 'react';
-import {Modal, View, Text, TouchableOpacity} from 'react-native';
+import {Modal, View, Text, TouchableOpacity, Alert, Linking, Platform} from 'react-native';
 import {modalStyles} from './modalStyles';
 import {Session} from '@constants/sessions';
 import {AppState, User} from '@ourtypes/AppState';
 import {useSelector} from 'react-redux';
+import { UTA_LOCATIONS_MAP_COORDINATES } from '@constants/locations';
 
 interface ViewSessionDetailsProps {
   isVisible: boolean;
@@ -26,6 +27,22 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
 
   const creator = users.find((user: User) => user.iD === sessionData.createdBy);
   const creatorName = creator ? creator.fullName : 'Unknown';
+
+  const handleLocationPress = () => {
+    const location = sessionData.location;
+
+    if (location in UTA_LOCATIONS_MAP_COORDINATES) {
+      const coordinates = (UTA_LOCATIONS_MAP_COORDINATES as Record<string, string>)[location];
+      const url = Platform.OS === 'ios'
+        ? `maps:0,0?q=${coordinates}`
+        : `geo:0,0?q=${coordinates}`;
+  
+      Linking.openURL(url).catch((err) => {
+        console.error("Error opening map:", err);
+        Alert.alert("Unable to open the map");
+      });
+    }
+  };
 
   return (
     <Modal
@@ -50,11 +67,13 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
             </Text>
           </View>
           <View style={modalStyles.row}>
-            <Text style={modalStyles.leftLabel}>Location:</Text>
-            <Text style={modalStyles.rightLabel}>Major:</Text>
+          <Text style={modalStyles.leftLabel}>Location:</Text>
+          <Text style={modalStyles.rightLabel}>Major:</Text>
           </View>
           <View style={modalStyles.row}>
-            <Text style={modalStyles.leftText}>{sessionData.location}</Text>
+          <TouchableOpacity onPress={handleLocationPress}>
+              <Text style={[modalStyles.leftText, { color: 'blue', textDecorationLine: 'underline' }]}>{sessionData.location}</Text>
+            </TouchableOpacity>
             <Text style={modalStyles.rightText}>{sessionData.major}</Text>
           </View>
           <View style={modalStyles.row}>

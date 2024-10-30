@@ -48,21 +48,24 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
         }
     };
 
-    const handleCreateSession = () => {
-        dispatch(addStudySession({
-            sessionTitle,
-            description,
-            date: sessionStart,
-            from,
-            to,
-            location,
-            major,
-            participantLimit
-        }));
-        ToastAndroid.show('Session created successfully!', ToastAndroid.LONG);
-        clearFields();
-        onClose();
-    };
+        const handleCreateSession = () => {
+            const adjustedParticipantLimit = Math.max(2, Math.min(participantLimit, 8));
+        
+            dispatch(addStudySession({
+                sessionTitle,
+                description,
+                date: sessionStart,
+                from,
+                to,
+                location,
+                major,
+                participantLimit: adjustedParticipantLimit
+            }));
+            
+            ToastAndroid.show('Session created successfully!', ToastAndroid.LONG);
+            clearFields();
+            onClose();
+        };
 
     const handleCancel = () => {
         if (sessionTitle || description || from || to || location || major || participantLimit) {
@@ -208,9 +211,8 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                         value={participantLimit.toString()}
                         keyboardType="numeric"
                         onChangeText={(text) => {
-                            
-                            const limit = Math.max(Number(text), 2);
-                            setParticipantLimit(limit);
+
+                            setParticipantLimit(Number(text));
                         }}
                         style={modalStyles.input}
                     />
