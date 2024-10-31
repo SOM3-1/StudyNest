@@ -4,9 +4,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { theme } from 'src/utils/theme';
-import Toast from 'react-native-toast-message';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '@store/appSlice';
+import { homeScreenStyles } from '@components/home/homeScreenStyles';
 
 export const ProfileScreen: React.FC = () => {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -44,7 +44,7 @@ export const ProfileScreen: React.FC = () => {
                 <MaterialIcons name="logout" size={24} color={theme.colors.blue} />
                 <Text style={styles.text}>Logout</Text>
             </TouchableOpacity>
-            {isLoading && <View style={styles.overlay}>
+            {isLoading && <View style={homeScreenStyles.overlay}>
                 <ActivityIndicator size={80} color={theme.colors.lightBlue} />
             </View>}
         </View>
@@ -72,11 +72,4 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc',
         marginVertical: 5,
     },
-    overlay : {
-        ...StyleSheet.absoluteFillObject, 
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        zIndex: 999,
-    }
 });

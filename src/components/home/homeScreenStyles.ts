@@ -121,4 +121,13 @@ export const homeScreenStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  overlay : {
+    ...StyleSheet.absoluteFillObject, 
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    zIndex: 999,
+    width: '100%',
+    height: '100%'
+}
 });

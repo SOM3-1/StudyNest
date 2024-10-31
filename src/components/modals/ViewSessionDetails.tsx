@@ -1,11 +1,13 @@
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, Alert, Linking, Platform, ToastAndroid } from 'react-native';
+import React, { useState } from 'react';
+import { Modal, View, Text, TouchableOpacity, Alert, Linking, Platform, ToastAndroid, ActivityIndicator } from 'react-native';
 import { modalStyles } from './modalStyles';
 import { Session } from '@constants/sessions';
 import { AppState, User } from '@ourtypes/AppState';
 import { useSelector, useDispatch } from 'react-redux';
 import { UTA_LOCATIONS_MAP_COORDINATES } from '@constants/locations';
 import { enrollInStudySession, leaveStudySession, removeStudySession } from '@store/appSlice';
+import { theme } from 'src/utils/theme';
+import { homeScreenStyles } from '@components/home/homeScreenStyles';
 
 interface ViewSessionDetailsProps {
   isVisible: boolean;
@@ -16,7 +18,7 @@ interface ViewSessionDetailsProps {
 
 const formatTitle = (title: string) => {
   return title
-    .trim() 
+    .trim()
     .toLowerCase()
     .replace(/\b\w/g, char => char.toUpperCase());
 };
@@ -33,6 +35,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   const creator = users.find((user: User) => user.iD === sessionData?.createdBy);
   const creatorName = creator ? creator.fullName : 'Unknown';
   const isEnrolled = sessionData?.sessionMembers.includes(loggedInUser?.iD || '');
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const handleLocationPress = () => {
     const location = sessionData?.location;
@@ -46,27 +49,51 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
     }
   };
 
+  const confirmAndHandleRemove = () => {
+    Alert.alert(
+      "Confirm Removal",
+      "Are you sure you want to remove this session?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Yes", onPress: handleRemove }
+      ]
+    );
+  };
+
   const handleEnroll = () => {
     if (sessionData) {
-      dispatch(enrollInStudySession({ sessionId: sessionData.sessionId }));
-      showToast(`You have enrolled in ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
-      onClose();
+      setIsLoading(true);
+      setTimeout(() => {
+        dispatch(enrollInStudySession({ sessionId: sessionData.sessionId }));
+        showToast(`You have enrolled in ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
+        onClose();
+        setIsLoading(false);
+      }, 2000);
     }
   };
 
   const handleLeave = () => {
     if (sessionData) {
-      dispatch(leaveStudySession({ sessionId: sessionData.sessionId }));
-      showToast(`You have left ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
-      onClose();
+      setIsLoading(true);
+      setTimeout(() => {
+        dispatch(leaveStudySession({ sessionId: sessionData.sessionId }));
+        showToast(`You have left ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
+        onClose();
+        setIsLoading(false);
+
+      }, 2000);
     }
   };
 
   const handleRemove = () => {
     if (sessionData) {
-      dispatch(removeStudySession({ sessionId: sessionData.sessionId }));
-      showToast(`${formatTitle(sessionData?.sessionTitle || 'Session')} removed successfully.`);
-      onClose();
+      setTimeout(() => {
+        dispatch(removeStudySession({ sessionId: sessionData.sessionId }));
+        showToast(`${formatTitle(sessionData?.sessionTitle || 'Session')} removed successfully.`);
+        onClose();
+        setIsLoading(false);
+      }, 2000);
+     
     }
   };
 
@@ -81,7 +108,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   const renderActionButton = () => {
     if (isOwner) {
       return (
-        <TouchableOpacity style={modalStyles.cancelButton} onPress={handleRemove}>
+        <TouchableOpacity style={modalStyles.cancelButton} onPress={confirmAndHandleRemove}>
           <Text style={modalStyles.buttonText}>Remove Session</Text>
         </TouchableOpacity>
       );
@@ -154,6 +181,9 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
             </TouchableOpacity>
           </View>
         </View>
+      {isLoading && <View style={homeScreenStyles.overlay}>
+        <ActivityIndicator size={80} color={theme.colors.lightBlue} />
+      </View>}
       </View>
     </Modal>
   );
