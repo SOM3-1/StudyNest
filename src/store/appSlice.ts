@@ -6,7 +6,7 @@ import { dummyUsers } from '@constants/users';
 import { generateRandomSessions } from '@components/helpers/createSessions';
 import { generateUUID } from '@components/helpers/uuidGenerator';
 import { Session } from '@constants/sessions';
-import { trackSessionCreation, trackSessionJoin, trackSessionLeave, trackSessionRemoval } from 'src/analytics/trackEvent';
+import { trackSessionCreation, trackSessionJoin, trackSessionLeave, trackSessionRemoval, trackUserRegistration } from 'src/analytics/trackEvent';
 
 const persistConfig = {
   key: 'root',
@@ -16,15 +16,28 @@ const persistConfig = {
 
 const initialState: AppState = {
   isLoggedIn: false,
-  users: dummyUsers,
+  users: [],
   loggedInUser: undefined,
-  sessions: generateRandomSessions()
+  sessions: []
 }
 
 const slice = createSlice({
   name: 'app',
   initialState,
   reducers: {
+
+    initializeSessions: (state) => {
+      if (state.sessions.length === 0) {
+        state.sessions = generateRandomSessions();
+      }
+    },
+    
+    initializeUsers: (state) => {
+      if (state.users.length === 0) {
+        state.users = dummyUsers;
+        dummyUsers.forEach((user: User) => trackUserRegistration(user))
+      }
+    },
 
     registerUser: (state, action: PayloadAction<{ fullName: string; email: string; major: string; password: string, iD: string }>) => {
       const { email, fullName, major, password, iD } = action.payload;
@@ -41,6 +54,7 @@ const slice = createSlice({
         state.users.push(newUser);
         state.isLoggedIn = true;
         state.loggedInUser = newUser;
+        trackUserRegistration(newUser)
       }
     },
 
@@ -127,5 +141,5 @@ const slice = createSlice({
 
 const persistedReducer = persistReducer(persistConfig, slice.reducer);
 export { persistedReducer as appReducer };
-export const { registerUser, loginUser, logoutUser, addStudySession, removeStudySession, enrollInStudySession, leaveStudySession } = slice.actions;
+export const { registerUser, loginUser, logoutUser, addStudySession, removeStudySession, enrollInStudySession, leaveStudySession, initializeSessions, initializeUsers } = slice.actions;
 export type { AppState };

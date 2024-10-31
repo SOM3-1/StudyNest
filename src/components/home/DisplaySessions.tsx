@@ -30,7 +30,8 @@ export const DisplaySessions: React.FC<DisplaySessionsType> = ({ sessions, logge
 
   const renderSessionCard = ({ item }: { item: Session }) => {
     const isOwner = item.createdBy === loggedInUser?.iD;
-
+    const isEnrolled = item.sessionMembers.includes(loggedInUser?.iD || '');
+  
     return (
       <TouchableOpacity onPress={() => openModal(item)} style={homeScreenStyles.card}>
         <View style={homeScreenStyles.card1}>
@@ -38,15 +39,17 @@ export const DisplaySessions: React.FC<DisplaySessionsType> = ({ sessions, logge
             <Text style={homeScreenStyles.sessionTitle} numberOfLines={1} ellipsizeMode="tail">
               {item.sessionTitle}
             </Text>
-            {isOwner && (
-              <MaterialIcons name="admin-panel-settings" size={24} color={theme.colors.primary} />
-            )}
+              {isOwner && (
+                <MaterialIcons name="admin-panel-settings" size={24} color={theme.colors.primary} />
+              )}
+              {isEnrolled && (
+                <MaterialIcons name="check-circle" size={24} color={theme.colors.primary} />
+              )}
           </View>
           <View style={homeScreenStyles.iconTextRow}>
             <MaterialIcons name="access-time" size={18} color={theme.colors.grey} />
             <Text style={homeScreenStyles.text}> {item.from} - {item.to} | {item.date}</Text>
           </View>
-
           <View style={homeScreenStyles.iconTextRow}>
             <MaterialIcons name="location-on" size={18} color={theme.colors.grey} />
             <Text style={homeScreenStyles.text}> {item.location} | {item.sessionMembers.length} / {item.participantLimit} Enrolled</Text>
@@ -55,6 +58,7 @@ export const DisplaySessions: React.FC<DisplaySessionsType> = ({ sessions, logge
       </TouchableOpacity>
     );
   };
+  
   return (<><FlatList
     data={sessions}
     keyExtractor={(item) => item.sessionId}

@@ -46,7 +46,6 @@ interface HeaderOptions {
   headerLeftContainerStyle: {
     paddingBottom: number;
   };
-  headerBackImage: typeof BackButton;
   headerRightContainerStyle: {
     paddingBottom: number;
     paddingRight: number;
@@ -68,7 +67,6 @@ export const headerOptions: HeaderOptions = {
     paddingBottom: 10,
     fontFamily: ''
   },
-  headerBackImage: BackButton,
   headerBackground: CustomHeaderBackground,
   headerTitleContainerStyle: {
     ...headerTitlePosition,

@@ -32,8 +32,8 @@ export const CustomTabBar: React.FC<{
       {state.routes.map((route: any, index: number) => {
         const {options} = descriptors[route.key];
         const iconSource = options?.title || route.name;
-        const label = (options?.displayTitle || options?.title || route.name)
-        .charAt(0).toUpperCase() + (options?.displayTitle || options?.title || route.name).slice(1).toLowerCase();
+        const label = (options?.headerTitle || options?.title || route.name)
+        .charAt(0).toUpperCase() + (options?.headerTitle || options?.title || route.name).slice(1).toLowerCase();
       
         const isFocused = state.index === index;
 

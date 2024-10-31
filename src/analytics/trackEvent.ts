@@ -1,7 +1,8 @@
 import { Session } from '@constants/sessions';
 import analytics from '@react-native-firebase/analytics';
 import { log } from '@services/Logger';
-import { addSessionMemberToFirestore, deleteSessionFromFirestore, removeSessionMemberFromFirestore, saveSessionToFirestore } from './sessionStrore';
+import { addSessionMemberToFirestore, deleteSessionFromFirestore, removeSessionMemberFromFirestore, saveSessionToFirestore, saveUserRegistration } from './sessionStrore';
+import { User } from '@ourtypes/AppState';
 
 export const trackSessionCreation = (session: Session, fullName: string): void => {
     analytics()
@@ -22,7 +23,7 @@ export const trackSessionCreation = (session: Session, fullName: string): void =
       .catch(error => {
         log.error(error);
       });
-      //saveSessionToFirestore(session)
+      saveSessionToFirestore(session)
   };
 
 export const trackSessionJoin = (sessionId: string, userId: string, fullName: string): void => {
@@ -62,4 +63,18 @@ export const trackSessionRemoval = (sessionId: string, removedBy: string, fullNa
       log.error(error);
     });
     deleteSessionFromFirestore(sessionId)
+};
+
+export const trackUserRegistration = async (user: User): Promise<void> => {
+  try {
+    await analytics().logEvent('user_registered', {
+      userId: user.iD,
+      fullName: user.fullName,
+      email: user.email,
+      major: user.major,
+    });
+    saveUserRegistration(user)
+  } catch (error) {
+    log.error('Error tracking user registration or saving to Firestore:', error);
+  }
 };

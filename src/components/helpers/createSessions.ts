@@ -23,16 +23,16 @@ export const UTA_LOCATIONS: PickerTypes[] = [
     { label: 'Teams Online Meeting', value: 'Teams Online Meeting' },
 ];
 
-
 export const generateRandomSessions = (): Session[] => {
     const sessions: Session[] = [];
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     const weekends = ['Saturday', 'Sunday'];
 
-    const getRandomUsers = (count: number): string[] => {
-        const shuffledUsers = [...dummyUsers].sort(() => 0.5 - Math.random());
+    const getRandomUsers = (count: number, excludeUserId: string): string[] => {
+        const shuffledUsers = dummyUsers.filter(user => user.iD !== excludeUserId).sort(() => 0.5 - Math.random());
         return shuffledUsers.slice(0, count).map(user => user.iD);
     };
+    
 
     const totalDays = 6;
     const minSessionsPerDay = 3;
@@ -72,7 +72,7 @@ export const generateRandomSessions = (): Session[] => {
                 major: creator.major,
                 participantLimit: 8,
                 createdBy: creator.iD,
-                sessionMembers: getRandomUsers(participantCount),
+                sessionMembers: getRandomUsers(participantCount, creator.iD),
             };
 
             sessions.push(session);

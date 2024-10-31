@@ -50,7 +50,7 @@ export const TabNavigator = () => {
       <Tab.Screen
         name="ProfileNavigator"
         component={ProfileNavigator}
-        options={{title: 'person', headerTitle: 'Account'}}
+        options={{title: 'person', headerTitle: 'Settings'}}
         listeners={tabPressListener}
       />
     </Tab.Navigator>

@@ -63,7 +63,7 @@ export const modalStyles = StyleSheet.create({
         backgroundColor: theme.colors.grey,
     },
     cancelButton: {
-        backgroundColor: theme.colors.red,
+        backgroundColor: theme.colors.grey,
         padding: 10,
         borderRadius: 8,
         width: '45%',
@@ -120,4 +120,21 @@ export const modalStyles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 20,
     },
+    detailRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical: 5,
+    },
+    detailText: {
+      marginLeft: 10,
+      fontSize: 16,
+      color: '#333',
+    },
+    removeButton: {
+      backgroundColor: theme.colors.red,
+      padding: 10,
+      borderRadius: 8,
+      width: '45%',
+  },
+    
 });
