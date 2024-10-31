@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { UTA_LOCATIONS_MAP_COORDINATES } from '@constants/locations';
 import { enrollInStudySession, leaveStudySession, removeStudySession } from '@store/appSlice';
 import { theme } from 'src/utils/theme';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { homeScreenStyles } from '@components/home/homeScreenStyles';
 
 interface ViewSessionDetailsProps {
@@ -16,12 +17,7 @@ interface ViewSessionDetailsProps {
   isOwner: boolean;
 }
 
-const formatTitle = (title: string) => {
-  return title
-    .trim()
-    .toLowerCase()
-    .replace(/\b\w/g, char => char.toUpperCase());
-};
+const formatTitle = (title: string) => title.trim().toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
 
 export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   isVisible,
@@ -35,66 +31,52 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   const creator = users.find((user: User) => user.iD === sessionData?.createdBy);
   const creatorName = creator ? creator.fullName : 'Unknown';
   const isEnrolled = sessionData?.sessionMembers.includes(loggedInUser?.iD || '');
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLocationPress = () => {
     const location = sessionData?.location;
     if (location && location in UTA_LOCATIONS_MAP_COORDINATES) {
       const coordinates = (UTA_LOCATIONS_MAP_COORDINATES as Record<string, string>)[location];
       const url = Platform.OS === 'ios' ? `maps:0,0?q=${coordinates}` : `geo:0,0?q=${coordinates}`;
-      Linking.openURL(url).catch((err) => {
-        console.error("Error opening map:", err);
-        Alert.alert("Unable to open the map");
-      });
+      Linking.openURL(url).catch(() => Alert.alert("Unable to open the map"));
     }
   };
 
   const confirmAndHandleRemove = () => {
-    Alert.alert(
-      "Confirm Removal",
-      "Are you sure you want to remove this session?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Yes", onPress: handleRemove }
-      ]
-    );
+    Alert.alert("Confirm Removal", "Are you sure you want to remove this session?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Yes", onPress: handleRemove },
+    ]);
   };
 
   const handleEnroll = () => {
-    if (sessionData) {
-      setIsLoading(true);
-      setTimeout(() => {
-        dispatch(enrollInStudySession({ sessionId: sessionData.sessionId }));
-        showToast(`You have enrolled in ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
-        onClose();
-        setIsLoading(false);
-      }, 2000);
-    }
+    setIsLoading(true);
+    setTimeout(() => {
+      dispatch(enrollInStudySession({ sessionId: sessionData?.sessionId || '' }));
+      showToast(`You have enrolled in ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
+      onClose();
+      setIsLoading(false);
+    }, 2000);
   };
 
   const handleLeave = () => {
-    if (sessionData) {
-      setIsLoading(true);
-      setTimeout(() => {
-        dispatch(leaveStudySession({ sessionId: sessionData.sessionId }));
-        showToast(`You have left ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
-        onClose();
-        setIsLoading(false);
-
-      }, 2000);
-    }
+    setIsLoading(true);
+    setTimeout(() => {
+      dispatch(leaveStudySession({ sessionId: sessionData?.sessionId || '' }));
+      showToast(`You have left ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
+      onClose();
+      setIsLoading(false);
+    }, 2000);
   };
 
   const handleRemove = () => {
-    if (sessionData) {
-      setTimeout(() => {
-        dispatch(removeStudySession({ sessionId: sessionData.sessionId }));
-        showToast(`${formatTitle(sessionData?.sessionTitle || 'Session')} removed successfully.`);
-        onClose();
-        setIsLoading(false);
-      }, 2000);
-     
-    }
+    setIsLoading(true);
+    setTimeout(() => {
+      dispatch(removeStudySession({ sessionId: sessionData?.sessionId || '' }));
+      showToast(`${formatTitle(sessionData?.sessionTitle || 'Session')} removed successfully.`);
+      onClose();
+      setIsLoading(false);
+    }, 2000);
   };
 
   const showToast = (message: string) => {
@@ -108,7 +90,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   const renderActionButton = () => {
     if (isOwner) {
       return (
-        <TouchableOpacity style={modalStyles.cancelButton} onPress={confirmAndHandleRemove}>
+        <TouchableOpacity style={modalStyles.removeButton} onPress={confirmAndHandleRemove}>
           <Text style={modalStyles.buttonText}>Remove Session</Text>
         </TouchableOpacity>
       );
@@ -128,52 +110,50 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   };
 
   return (
-    <Modal
-      visible={isVisible}
-      animationType="slide"
-      transparent
-      onRequestClose={onClose}>
+    <Modal visible={isVisible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={modalStyles.modalBackground}>
         <View style={modalStyles.modalContainer}>
           <Text style={[modalStyles.modalTitle, modalStyles.capitalize]}>
             {formatTitle(sessionData?.sessionTitle || 'Session')}
           </Text>
           {sessionData?.description && <Text style={modalStyles.text}>{sessionData.description}</Text>}
-          <View style={modalStyles.row}>
-            <Text style={modalStyles.leftLabel}>Date:</Text>
-            <Text style={modalStyles.rightLabel}>Time:</Text>
+          
+          <View style={modalStyles.detailRow}>
+            <MaterialIcons name="event" size={20} color={theme.colors.blue} />
+            <Text style={modalStyles.detailText}>{sessionData?.date}</Text>
           </View>
-          <View style={modalStyles.row}>
-            <Text style={modalStyles.leftText}>{sessionData?.date}</Text>
-            <Text style={modalStyles.rightText}>
-              {sessionData?.from} - {sessionData?.to}
-            </Text>
+
+          <View style={modalStyles.detailRow}>
+            <MaterialIcons name="schedule" size={20} color={theme.colors.blue} />
+            <Text style={modalStyles.detailText}>{sessionData?.from} - {sessionData?.to}</Text>
           </View>
-          <View style={modalStyles.row}>
-            <Text style={modalStyles.leftLabel}>Location:</Text>
-            <Text style={modalStyles.rightLabel}>Major:</Text>
-          </View>
-          <View style={modalStyles.row}>
+          
+          <View style={modalStyles.detailRow}>
+            <MaterialIcons name="place" size={20} color={theme.colors.blue} />
             <TouchableOpacity onPress={handleLocationPress}>
-              <Text style={[modalStyles.leftText, { color: 'blue', textDecorationLine: 'underline' }]}>{sessionData?.location}</Text>
+              <Text style={[modalStyles.detailText, { color: 'blue', textDecorationLine: 'underline' }]}>{sessionData?.location}</Text>
             </TouchableOpacity>
-            <Text style={modalStyles.rightText}>{sessionData?.major}</Text>
           </View>
-          <View style={modalStyles.row}>
-            <Text style={modalStyles.leftLabel}>Participants:</Text>
-            <Text style={modalStyles.rightLabel}>Hosted By:</Text>
+
+          <View style={modalStyles.detailRow}>
+            <MaterialIcons name="school" size={20} color={theme.colors.blue} />
+            <Text style={modalStyles.detailText}>{sessionData?.major}</Text>
           </View>
-          <View style={modalStyles.row}>
-            <Text style={modalStyles.leftText}>
-              {sessionData?.sessionMembers.length} / {sessionData?.participantLimit} Enrolled
-            </Text>
-            <Text style={modalStyles.rightText}>{creatorName}</Text>
+
+          <View style={modalStyles.detailRow}>
+            <MaterialIcons name="group" size={20} color={theme.colors.blue} />
+            <Text style={modalStyles.detailText}>{sessionData?.sessionMembers.length} / {sessionData?.participantLimit} Enrolled</Text>
           </View>
+
+          <View style={modalStyles.detailRow}>
+            <MaterialIcons name="person" size={20} color={theme.colors.blue} />
+            <Text style={modalStyles.detailText}>Hosted By: {creatorName}</Text>
+          </View>
+
           {isOwner && (
-            <Text style={modalStyles.ownerText}>
-              You are the owner of this session.
-            </Text>
+            <Text style={modalStyles.ownerText}>You are the owner of this session.</Text>
           )}
+
           <View style={modalStyles.buttonContainer}>
             {renderActionButton()}
             <TouchableOpacity style={modalStyles.cancelButton} onPress={onClose}>
@@ -181,9 +161,12 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
             </TouchableOpacity>
           </View>
         </View>
-      {isLoading && <View style={homeScreenStyles.overlay}>
-        <ActivityIndicator size={80} color={theme.colors.lightBlue} />
-      </View>}
+        
+        {isLoading && (
+          <View style={homeScreenStyles.overlay}>
+            <ActivityIndicator size={80} color={theme.colors.lightBlue} />
+          </View>
+        )}
       </View>
     </Modal>
   );
