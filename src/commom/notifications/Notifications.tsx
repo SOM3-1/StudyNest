@@ -1,20 +1,23 @@
 import React, {useEffect} from 'react';
-import messaging from '@react-native-firebase/messaging';
+import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
 import {log} from '@services/Logger';
 import { RemoteMessage } from '@ourtypes/notifications';
+import { useSelector } from 'react-redux';
+import { AppState } from '@store/appSlice';
 
 export const Notifications: React.FC = () => {
-
+  const loggedInUserId = useSelector((state: AppState) => state.loggedInUser?.iD);
   useEffect(() => {
-    const messageListener = messaging().onMessage((remoteMessage: RemoteMessage) => {
+    const messageListener = messaging().onMessage((remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
       log.debug('Remote Message:', JSON.stringify(remoteMessage));
-      const { notification } = remoteMessage;
+      const { notification, data } = remoteMessage;
       const title = notification?.title;
       const body = notification?.body;
+      const userIdInMessage = data?.userId;
 
           try {
-            if (title || body) {
+            if (title && body && (!userIdInMessage || userIdInMessage === loggedInUserId)) {
                Alert.alert(`${title}`, `${body}`, [
                   {text: 'Ok', style: 'cancel'},
                 ]);
