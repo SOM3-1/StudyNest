@@ -1,24 +1,39 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
+import { headerLeft, headerOptions } from '@constants/menuConstants';
+import { AccountSettings } from '@components/profile/AccountSettings';
+import { ViewProfile } from '@components/profile/ViewProfile';
+import { ProfileScreen } from '@components/profile/ProfileScreen';
+
 const Stack = createStackNavigator();
-import { Home } from '@components/home/Home';
-import { headerLeft, headerOptions, } from '@constants/menuConstants';
-import { Profile } from '@components/profile/Profile';
 
 export const ProfileNavigator: React.FC = () => {
-
   return (
     <Stack.Navigator
-      initialRouteName="ProfileNavigator"
-      screenOptions={{
-        ...headerOptions,
-      }}>
+      initialRouteName="ProfileScreen"
+      screenOptions={headerOptions}
+    >
       <Stack.Screen
-        name="account"
-        component={Profile}
+        name="ProfileScreen"
+        component={ProfileScreen}
         options={{
-            ...headerOptions,
-          headerTitle: 'Profile',
+          headerTitle: 'Settings',
+          ...headerLeft,
+        }}
+      />
+      <Stack.Screen
+        name="ViewProfile"
+        component={ViewProfile}
+        options={{
+          headerTitle: 'View Profile',
+          ...headerLeft,
+        }}
+      />
+      <Stack.Screen
+        name="AccountSettings"
+        component={AccountSettings}
+        options={{
+          headerTitle: 'Account Settings',
           ...headerLeft,
         }}
       />

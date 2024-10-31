@@ -18,13 +18,19 @@ const initialState: AppState = {
   isLoggedIn: false,
   users: dummyUsers,
   loggedInUser: undefined,
-  sessions: generateRandomSessions()
+  sessions: []
 }
 
 const slice = createSlice({
   name: 'app',
   initialState,
   reducers: {
+
+    initializeSessions: (state) => {
+      if (state.sessions.length === 0) {
+        state.sessions = generateRandomSessions();
+      }
+    },
 
     registerUser: (state, action: PayloadAction<{ fullName: string; email: string; major: string; password: string, iD: string }>) => {
       const { email, fullName, major, password, iD } = action.payload;
@@ -127,5 +133,5 @@ const slice = createSlice({
 
 const persistedReducer = persistReducer(persistConfig, slice.reducer);
 export { persistedReducer as appReducer };
-export const { registerUser, loginUser, logoutUser, addStudySession, removeStudySession, enrollInStudySession, leaveStudySession } = slice.actions;
+export const { registerUser, loginUser, logoutUser, addStudySession, removeStudySession, enrollInStudySession, leaveStudySession, initializeSessions } = slice.actions;
 export type { AppState };
