@@ -37,8 +37,10 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
     const location = sessionData?.location;
     if (location && location in UTA_LOCATIONS_MAP_COORDINATES) {
       const coordinates = (UTA_LOCATIONS_MAP_COORDINATES as Record<string, string>)[location];
-      const url = Platform.OS === 'ios' ? `maps:0,0?q=${coordinates}` : `geo:0,0?q=${coordinates}`;
-      Linking.openURL(url).catch(() => Alert.alert("Unable to open the map"));
+      if (coordinates) {
+        const url = Platform.OS === 'ios' ? `maps:0,0?q=${coordinates}` : `geo:0,0?q=${coordinates}`;
+        Linking.openURL(url).catch(() => Alert.alert("Unable to open the map"));
+      }
     }
   };
 
@@ -46,6 +48,13 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
     Alert.alert("Confirm Removal", "Are you sure you want to remove this session?", [
       { text: "Cancel", style: "cancel" },
       { text: "Yes", onPress: handleRemove },
+    ]);
+  };
+
+  const confirmAndHandleLeave = () => {
+    Alert.alert("Confirm Removal", "Are you sure you want to leave this session?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Yes", onPress: handleLeave },
     ]);
   };
 
@@ -97,7 +106,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
     }
     if (isEnrolled) {
       return (
-        <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={handleLeave}>
+        <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={confirmAndHandleLeave}>
           <Text style={modalStyles.buttonText}>Leave Session</Text>
         </TouchableOpacity>
       );
@@ -117,7 +126,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
             {formatTitle(sessionData?.sessionTitle || 'Session')}
           </Text>
           {sessionData?.description && <Text style={modalStyles.text}>{sessionData.description}</Text>}
-          
+
           <View style={modalStyles.detailRow}>
             <MaterialIcons name="event" size={20} color={theme.colors.blue} />
             <Text style={modalStyles.detailText}>{sessionData?.date}</Text>
@@ -127,7 +136,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
             <MaterialIcons name="schedule" size={20} color={theme.colors.blue} />
             <Text style={modalStyles.detailText}>{sessionData?.from} - {sessionData?.to}</Text>
           </View>
-          
+
           <View style={modalStyles.detailRow}>
             <MaterialIcons name="place" size={20} color={theme.colors.blue} />
             <TouchableOpacity onPress={handleLocationPress}>
@@ -161,7 +170,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
             </TouchableOpacity>
           </View>
         </View>
-        
+
         {isLoading && (
           <View style={homeScreenStyles.overlay}>
             <ActivityIndicator size={80} color={theme.colors.lightBlue} />

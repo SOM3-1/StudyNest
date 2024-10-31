@@ -8,7 +8,7 @@ import { AppState } from '@ourtypes/AppState';
 import { UserSelection } from '@components/user/UserSelection';
 import { Notifications } from 'src/commom/notifications/Notifications';
 import { trackScreenName } from 'src/analytics/trackScreenName';
-import { initializeSessions } from '@store/appSlice';
+import { initializeSessions, initializeUsers } from '@store/appSlice';
 
 export const MenuWrapperComponent = () => {
   const styles = useMenuStyles();
@@ -25,6 +25,7 @@ export const MenuWrapperComponent = () => {
     }
   };
   useEffect(() => {
+    dispatch(initializeUsers());
     dispatch(initializeSessions());
   }, [dispatch]);
 

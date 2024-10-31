@@ -10,7 +10,6 @@ export const ViewProfile: React.FC = () => {
   const loggedInUser = useSelector((state: AppState) => state.loggedInUser);
   const sessions = useSelector((state: AppState) => state.sessions);
 
-  // Helper functions to retrieve owned and enrolled sessions
   const getOwnedSessions = (sessions: Session[], userId: string | undefined): Session[] => {
     return sessions.filter(session => session.createdBy === userId);
   };

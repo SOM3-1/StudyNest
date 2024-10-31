@@ -7,10 +7,12 @@ export const getAvailableAndSortedSessions = (sessions: Session[]): Session[] =>
   const availableSessions = sessions.filter(session => {
     const sessionEndTime = DateTime.fromISO(`${session.date}T${session.to}`);
 
-    const isParticipationAvailable = session.sessionMembers.length < session.participantLimit;
+    //Todo: Update if needed
+    //const isParticipationAvailable = session.sessionMembers.length < session.participantLimit;
     const isSessionInFuture = sessionEndTime > nowMinus30;
 
-    return isParticipationAvailable && isSessionInFuture;
+    return isSessionInFuture;
+    //return isParticipationAvailable && isSessionInFuture;
   });
 
   const sortedSessions = [...availableSessions].sort((a, b) => {
