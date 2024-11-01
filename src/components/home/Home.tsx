@@ -32,7 +32,7 @@ export const Home: React.FC = () => {
 
     const filterTimeout = setTimeout(() => {
       const filtered = sortedSessions.filter(session => {
-        const sessionDate = DateTime.fromISO(session.date).toISODate();
+        const sessionDate = DateTime.fromISO(session.from).toISODate();
 
         const matchesDate = selectedDate ? sessionDate === selectedDate : true;
 

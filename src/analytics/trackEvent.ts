@@ -10,7 +10,6 @@ export const trackSessionCreation = (session: Session, fullName: string): void =
         sessionId: session.sessionId,
         sessionTitle: session.sessionTitle,
         description: session.description,
-        date: session.date,
         from: session.from,
         to: session.to,
         location: session.location,

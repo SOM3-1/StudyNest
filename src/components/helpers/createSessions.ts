@@ -32,7 +32,6 @@ export const generateRandomSessions = (): Session[] => {
         const shuffledUsers = dummyUsers.filter(user => user.iD !== excludeUserId).sort(() => 0.5 - Math.random());
         return shuffledUsers.slice(0, count).map(user => user.iD);
     };
-    
 
     const totalDays = 6;
     const minSessionsPerDay = 3;
@@ -44,8 +43,6 @@ export const generateRandomSessions = (): Session[] => {
 
         for (let i = 0; i < sessionsToday; i++) {
             const isWeekend = currentDay.weekday >= 6;
-            const dayOfWeek = isWeekend ? weekends[Math.floor(Math.random() * weekends.length)] : weekdays[Math.floor(Math.random() * weekdays.length)];
-
             const sessionDuration = isWeekend ? 90 : Math.random() < 0.5 ? 30 : 60;
 
             let sessionStart;
@@ -65,9 +62,8 @@ export const generateRandomSessions = (): Session[] => {
                 sessionId: generateUUID(),
                 sessionTitle: `${creator.major} Study Session`,
                 description: `A study session for ${creator.major} led by ${creator.fullName}.`,
-                date: sessionStart.toISODate(),
-                from: sessionStart.toFormat('HH:mm'),
-                to: sessionEnd.toFormat('HH:mm'),
+                from: sessionStart.toISO(),
+                to: sessionEnd.toISO(),
                 location: location.value,
                 major: creator.major,
                 participantLimit: 8,
@@ -76,7 +72,7 @@ export const generateRandomSessions = (): Session[] => {
             };
 
             sessions.push(session);
-            trackSessionCreation(session, creator.fullName)
+            trackSessionCreation(session, creator.fullName);
         }
     }
 

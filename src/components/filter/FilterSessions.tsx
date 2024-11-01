@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import DateTimePicker from '@react-native-community/datetimepicker'; 
+import DatePicker from 'react-native-date-picker'; 
 import { DateTime } from 'luxon';
 import { homeScreenStyles } from '@components/home/homeScreenStyles';
 import CustomTextInput from 'src/commom/CustomTextInput';
@@ -21,7 +21,6 @@ export const FilterSessions: React.FC<FilterSessionsProps> = ({ onSearch, search
     setSearchInput(searchTerm); 
   }, [searchTerm]);
 
-
   const handleSearchChange = (text: string) => {
     setSearchInput(text); 
 
@@ -36,12 +35,10 @@ export const FilterSessions: React.FC<FilterSessionsProps> = ({ onSearch, search
     setDebounceTimeout(newTimeout); 
   };
 
-  const handleDateChange = (event: any, date?: Date | null) => {
+  const handleDateConfirm = (date: Date) => {
     setShowDatePicker(false);
-    if (date) {
-      const isoDate = DateTime.fromJSDate(date).toISODate() || DateTime.now().toISODate();
-      onSearch(searchInput, isoDate); 
-    }
+    const isoDate = DateTime.fromJSDate(date).toISODate();
+    onSearch(searchInput, isoDate); 
   };
 
   return (
@@ -57,15 +54,15 @@ export const FilterSessions: React.FC<FilterSessionsProps> = ({ onSearch, search
         <MaterialIcons name="calendar-month" size={30} color="black" />
       </TouchableOpacity>
 
-      {showDatePicker && (
-        <DateTimePicker
-          value={selectedDate ? DateTime.fromISO(selectedDate).toJSDate() : new Date()} 
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-          minimumDate={new Date()} 
-        />
-      )}
+      <DatePicker
+        modal
+        mode="date"
+        open={showDatePicker}
+        date={selectedDate ? DateTime.fromISO(selectedDate).toJSDate() : new Date()}
+        minimumDate={new Date()}
+        onConfirm={handleDateConfirm}
+        onCancel={() => setShowDatePicker(false)}
+      />
     </View>
   );
 };

@@ -9,6 +9,7 @@ import { enrollInStudySession, leaveStudySession, removeStudySession } from '@st
 import { theme } from 'src/utils/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { homeScreenStyles } from '@components/home/homeScreenStyles';
+import { DateTime } from 'luxon';
 
 interface ViewSessionDetailsProps {
   isVisible: boolean;
@@ -33,6 +34,15 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   const isEnrolled = sessionData?.sessionMembers.includes(loggedInUser?.iD || '');
   const [isLoading, setIsLoading] = useState(false);
 
+  const fromDateTime = DateTime.fromISO(sessionData?.from || '');
+  const toDateTime = DateTime.fromISO(sessionData?.to || '');
+  const sameDate = fromDateTime.hasSame(toDateTime, 'day');
+  
+  const dateDisplay = sameDate
+    ? `${fromDateTime.toFormat('yyyy-MM-dd')} | ${fromDateTime.toFormat('HH:mm')} - ${toDateTime.toFormat('HH:mm')}`
+    : `${fromDateTime.toFormat('yyyy-MM-dd HH:mm')} - ${toDateTime.toFormat('yyyy-MM-dd HH:mm')}`;
+  
+    
   const handleLocationPress = () => {
     const location = sessionData?.location;
     if (location && location in UTA_LOCATIONS_MAP_COORDINATES) {
@@ -129,12 +139,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
 
           <View style={modalStyles.detailRow}>
             <MaterialIcons name="event" size={20} color={theme.colors.blue} />
-            <Text style={modalStyles.detailText}>{sessionData?.date}</Text>
-          </View>
-
-          <View style={modalStyles.detailRow}>
-            <MaterialIcons name="schedule" size={20} color={theme.colors.blue} />
-            <Text style={modalStyles.detailText}>{sessionData?.from} - {sessionData?.to}</Text>
+            <Text style={modalStyles.detailText}>{dateDisplay}</Text>
           </View>
 
           <View style={modalStyles.detailRow}>
@@ -164,10 +169,10 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
           )}
 
           <View style={modalStyles.buttonContainer}>
-            {renderActionButton()}
             <TouchableOpacity style={modalStyles.cancelButton} onPress={onClose}>
               <Text style={modalStyles.buttonText}>Close</Text>
             </TouchableOpacity>
+            {renderActionButton()}
           </View>
         </View>
 
