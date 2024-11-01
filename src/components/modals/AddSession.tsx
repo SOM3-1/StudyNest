@@ -10,7 +10,7 @@ import { MAJORS } from '@constants/majors';
 import { modalStyles } from './modalStyles';
 import CustomTextInput from 'src/commom/CustomTextInput';
 import { theme } from 'src/utils/theme';
-
+import Slider from '@react-native-community/slider';
 
 export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => void }> = ({ isVisible, onClose }) => {
     const dispatch = useDispatch();
@@ -48,24 +48,24 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
         }
     };
 
-        const handleCreateSession = () => {
-            const adjustedParticipantLimit = Math.max(2, Math.min(participantLimit, 8));
-        
-            dispatch(addStudySession({
-                sessionTitle,
-                description,
-                date: sessionStart,
-                from,
-                to,
-                location,
-                major,
-                participantLimit: adjustedParticipantLimit
-            }));
-            
-            ToastAndroid.show('Session created successfully!', ToastAndroid.LONG);
-            clearFields();
-            onClose();
-        };
+    const handleCreateSession = () => {
+       //const adjustedParticipantLimit = Math.max(2, Math.min(participantLimit, 8));
+
+        dispatch(addStudySession({
+            sessionTitle,
+            description,
+            date: sessionStart,
+            from,
+            to,
+            location,
+            major,
+            participantLimit
+        }));
+
+        ToastAndroid.show('Session created successfully!', ToastAndroid.LONG);
+        clearFields();
+        onClose();
+    };
 
     const handleCancel = () => {
         if (sessionTitle || description || from || to || location || major || participantLimit) {
@@ -206,17 +206,21 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                         </Picker>
                     </View>
                     <Text style={modalStyles.label}>No. of participants</Text>
-                    <CustomTextInput
-                        placeholder="Participant Limit"
-                        value={participantLimit.toString()}
-                        keyboardType="numeric"
-                        onChangeText={(text) => {
-
-                            setParticipantLimit(Number(text));
-                        }}
-                        style={modalStyles.input}
-                    />
-
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ ...modalStyles.label,marginRight: 10 }}>{2}</Text>
+                        <Slider
+                            style={{ flex: 1 }}
+                            minimumValue={2}
+                            maximumValue={8}
+                            step={1}
+                            value={participantLimit}
+                            onValueChange={(value) => setParticipantLimit(value)}
+                            minimumTrackTintColor={theme.colors.blue}
+                            maximumTrackTintColor={theme.colors.lightGrey}
+                        />
+                        <Text style={{...modalStyles.label, marginLeft: 10,}}>{8}</Text>
+                    </View>
+                    <Text style={{...modalStyles.label, textAlign: 'center', marginTop: 5 }}>{participantLimit}</Text>
                     <View style={modalStyles.buttonContainer}>
                         <TouchableOpacity style={modalStyles.cancelButton} onPress={handleCancel}>
                             <Text style={modalStyles.buttonText}>Cancel</Text>
