@@ -18,13 +18,12 @@ async function checkAndSendNotifications() {
     const thirtyMinutesLater = now.plus({ minutes: 30 });
 
     console.log(`Checking sessions starting between ${twentyNineMinutesLater.toFormat('HH:mm')} and ${thirtyMinutesLater.toFormat('HH:mm')} on ${now.toISODate()}`);
-
+console.log()
     const sessionsRef = db.collection('sessions');
     const snapshot = await sessionsRef
-      .where('date', '==', now.toISODate())
-      .where('from', '>=', twentyNineMinutesLater.toFormat('HH:mm'))
-      .where('from', '<=', thirtyMinutesLater.toFormat('HH:mm'))
-      .get();
+    .where('from', '>=', twentyNineMinutesLater.toUTC().toISO()) 
+    .where('from', '<=', thirtyMinutesLater.toUTC().toISO())
+    .get();
 
     if (snapshot.empty) {
       console.log('No sessions starting in the next 29-30 minutes');
@@ -45,7 +44,7 @@ async function checkAndSendNotifications() {
           const notificationKey = `${doc.id}_${userId}`;
           if (sentNotifications.has(notificationKey)) {
             console.log(`Notification already sent for session ${session.sessionTitle} to user ${userId}`);
-            return; // Skip sending if already in set
+            return;
           }
 
           if (fcmToken) {
@@ -90,6 +89,5 @@ function sendNotification(token, sessionTitle, location, userId) {
     });
 }
 
-// Schedule the check to run every 30 seconds
 cron.schedule('*/30 * * * * *', checkAndSendNotifications);
 console.log('Notification server started');
