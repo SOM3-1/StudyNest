@@ -92,7 +92,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
             <View style={modalStyles.modalBackground}>
                 <View style={modalStyles.modalContainer}>
                     <Text style={modalStyles.modalTitle}>Create a New Study Session</Text>
-                    <Text style={modalStyles.label}>Session Title</Text>
+                    <Text style={modalStyles.label}>Session Title <Text style={modalStyles.imp}>*</Text></Text>
                     <CustomTextInput
                         placeholder="Session Title"
                         value={sessionTitle}
@@ -106,7 +106,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                         onChangeText={setDescription}
                         style={modalStyles.input}
                     />
-                    <Text style={modalStyles.label}>Date</Text>
+                    <Text style={modalStyles.label}>Date <Text style={modalStyles.imp}>*</Text></Text>
                     <TouchableOpacity onPress={() => setShowDatePicker(true)} style={modalStyles.input}>
                         <Text style={modalStyles.pickerTextStyle}>{sessionStart}</Text>
                     </TouchableOpacity>
@@ -121,7 +121,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                             minimumDate={new Date()}
                         />
                     )}
-                    <Text style={modalStyles.label}>From</Text>
+                    <Text style={modalStyles.label}>From <Text style={modalStyles.imp}>*</Text></Text>
                     <TouchableOpacity onPress={() => setShowFromTimePicker(true)} style={modalStyles.input}>
                         <Text style={modalStyles.pickerTextStyle}>{from || "Select From Time"}</Text>
                     </TouchableOpacity>
@@ -154,7 +154,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                             }}
                         />
                     )}
-                    <Text style={modalStyles.label}>To</Text>
+                    <Text style={modalStyles.label}>To <Text style={modalStyles.imp}>*</Text></Text>
                     <TouchableOpacity onPress={() => setShowToTimePicker(true)} style={modalStyles.input}>
                         <Text style={modalStyles.pickerTextStyle}>{to || "Select To Time"}</Text>
                     </TouchableOpacity>
@@ -179,7 +179,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                         />
                     )}
 
-                    <Text style={modalStyles.label}>Location</Text>
+                    <Text style={modalStyles.label}>Location <Text style={modalStyles.imp}>*</Text></Text>
                     <View style={modalStyles.pickerContainer}>
                         <Picker
                             selectedValue={location}
@@ -192,7 +192,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                             ))}
                         </Picker>
                     </View>
-                    <Text style={modalStyles.label}>Major</Text>
+                    <Text style={modalStyles.label}>Major <Text style={modalStyles.imp}>*</Text></Text>
                     <View style={modalStyles.pickerContainer}>
                         <Picker
                             selectedValue={major}
@@ -205,7 +205,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                             ))}
                         </Picker>
                     </View>
-                    <Text style={modalStyles.label}>No. of participants</Text>
+                    <Text style={modalStyles.label}>No. of participants <Text style={modalStyles.imp}>*</Text></Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ ...modalStyles.label,marginRight: 10 }}>{2}</Text>
                         <Slider
@@ -220,7 +220,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
                         />
                         <Text style={{...modalStyles.label, marginLeft: 10,}}>{8}</Text>
                     </View>
-                    <Text style={{...modalStyles.label, textAlign: 'center', marginTop: 5 }}>{participantLimit}</Text>
+                    <Text style={{...modalStyles.label, textAlign: 'center' }}>{participantLimit}</Text>
                     <View style={modalStyles.buttonContainer}>
                         <TouchableOpacity style={modalStyles.cancelButton} onPress={handleCancel}>
                             <Text style={modalStyles.buttonText}>Cancel</Text>
