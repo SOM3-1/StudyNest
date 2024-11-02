@@ -9,6 +9,7 @@ import { SelectionType } from './UserSelection';
 import { registrationStyles } from './registrationStyles';
 import { log } from '@services/Logger';
 import CustomTextInput from 'src/commom/CustomTextInput';
+import firestore from '@react-native-firebase/firestore';
 
 export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> = ({ handleSelection }) => {
   const [email, setEmail] = useState('');
@@ -44,7 +45,11 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
 
     try {
       const user = users.find(user => user.email.toLowerCase() === email.toLowerCase() && user.password === password);
-      if (user) {
+      const userSnapshot = await firestore()
+      .collection('users')
+      .where('email', '==', email.toLowerCase())
+      .get();
+      if (!userSnapshot.empty) {
         setTimeout(() => {
           dispatch(loginUser({ email, password }));
           ToastAndroid.show('Logged in successfully!', ToastAndroid.SHORT);

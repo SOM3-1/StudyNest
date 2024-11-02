@@ -11,6 +11,7 @@ import { Picker } from '@react-native-picker/picker';
 import { MAJORS } from '@constants/majors';
 import { log } from '@services/Logger';
 import CustomTextInput from 'src/commom/CustomTextInput';
+import firestore from '@react-native-firebase/firestore';
 
 export const Register: React.FC<{ handleSelection: (val: SelectionType) => void }> = ({ handleSelection }) => {
   const [fullName, setFullName] = useState('');
@@ -58,12 +59,16 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
       return;
     }
     const emailLower = email.toLowerCase();
-    if (users.find(user => user.email.toLowerCase() === emailLower)) {
+    const userSnapshot = await firestore()
+      .collection('users')
+      .where('email', '==', emailLower)
+      .get();
+
+    if (!userSnapshot.empty) {
       setError('Email is already registered');
       setIsLoading(false);
       return;
     }
-
 
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));

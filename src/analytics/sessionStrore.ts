@@ -105,6 +105,7 @@ export const saveUserRegistration = async(user: User): Promise<void> => {
         fullName: user.fullName,
         email: user.email,
         major: user.major,
+        password: user.password
       });
       log.info(`User document created in Firestore for user ID: ${user.iD}`);
     } else {
