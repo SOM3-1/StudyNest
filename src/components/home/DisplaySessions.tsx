@@ -1,11 +1,11 @@
 import { Session } from "@constants/sessions";
-import { TouchableOpacity, View, Text, FlatList } from "react-native";
+import { TouchableOpacity, View, Text, FlatList, RefreshControl } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { theme } from "src/utils/theme";
 import { homeScreenStyles } from "./homeScreenStyles";
 import { User } from "@ourtypes/AppState";
 import { ViewSessionDetails } from "@components/modals/ViewSessionDetails";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { DateTime } from 'luxon';
 
 interface DisplaySessionsType {
@@ -28,6 +28,15 @@ export const DisplaySessions: React.FC<DisplaySessionsType> = ({ sessions, logge
     setIsModalVisible(false);
     setCurrentSession(null);
   };
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const refreshSessions = useCallback(() => {
+    setRefreshing(true); 
+    setTimeout(() => {
+      setRefreshing(false); 
+    }, 2000);
+  }, []);
 
   const renderSessionCard = ({ item }: { item: Session }) => {
     const isOwner = item.createdBy === loggedInUser?.iD;
@@ -75,6 +84,11 @@ export const DisplaySessions: React.FC<DisplaySessionsType> = ({ sessions, logge
         data={sessions}
         keyExtractor={(item) => item.sessionId}
         renderItem={renderSessionCard}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refreshSessions} 
+          colors={[theme.colors.lightGreen]}
+          tintColor={theme.colors.lightGreen} />
+        }
       />
       <ViewSessionDetails isVisible={isModalVisible} onClose={closeModal} sessionData={currentSession} isOwner={isCreator} />
     </>
