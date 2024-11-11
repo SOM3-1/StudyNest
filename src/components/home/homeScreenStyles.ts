@@ -98,8 +98,8 @@ export const homeScreenStyles = StyleSheet.create({
   },
   floatingButton: {
     position: 'absolute',
-    bottom: 20,
-    right: 20,
+    bottom: 0,
+    right: 0,
     backgroundColor: theme.colors.blue,
     borderRadius: 50,
     padding: 10,

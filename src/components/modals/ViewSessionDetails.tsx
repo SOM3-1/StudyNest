@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, Alert, Linking, Platform, ToastAndroid, ActivityIndicator } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, Alert, Linking, Platform, ToastAndroid, ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
 import { modalStyles } from './modalStyles';
 import { Session } from '@constants/sessions';
 import { AppState, User } from '@ourtypes/AppState';
@@ -37,12 +37,14 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   const fromDateTime = DateTime.fromISO(sessionData?.from || '');
   const toDateTime = DateTime.fromISO(sessionData?.to || '');
   const sameDate = fromDateTime.hasSame(toDateTime, 'day');
-  
+
+  const isSessionLimitReached: boolean = sessionData?.sessionMembers?.length === sessionData?.participantLimit;
+
   const dateDisplay = sameDate
     ? `${fromDateTime.toFormat('yyyy-MM-dd')} | ${fromDateTime.toFormat('HH:mm')} - ${toDateTime.toFormat('HH:mm')}`
     : `${fromDateTime.toFormat('yyyy-MM-dd HH:mm')} - ${toDateTime.toFormat('yyyy-MM-dd HH:mm')}`;
-  
-    
+
+
   const handleLocationPress = () => {
     const location = sessionData?.location;
     if (location && location in UTA_LOCATIONS_MAP_COORDINATES) {
@@ -121,11 +123,21 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
         </TouchableOpacity>
       );
     }
+    if (!isSessionLimitReached) {
+      return (
+        <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={handleEnroll}>
+          <Text style={modalStyles.buttonText}>Enroll</Text>
+        </TouchableOpacity>
+      );
+    }
     return (
-      <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={handleEnroll}>
+      <TouchableWithoutFeedback>
+        <View  style={[modalStyles.button, modalStyles.disabledButton]}>
         <Text style={modalStyles.buttonText}>Enroll</Text>
-      </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
     );
+
   };
 
   return (
@@ -166,6 +178,10 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
 
           {isOwner && (
             <Text style={modalStyles.ownerText}>You are the owner of this session.</Text>
+          )}
+
+          {isSessionLimitReached && !isOwner && (
+            <Text style={{...modalStyles.ownerText, color: theme.colors.red}}>This session has reached its participant limit. Enrollment is no longer available.</Text>
           )}
 
           <View style={modalStyles.buttonContainer}>

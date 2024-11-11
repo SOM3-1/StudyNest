@@ -50,10 +50,10 @@ export const DisplaySessions: React.FC<DisplaySessionsType> = ({ sessions, logge
               {item.sessionTitle}
             </Text>
             {isOwner && (
-              <MaterialIcons name="admin-panel-settings" size={24} color={theme.colors.darkGreen} />
+              <MaterialIcons name="admin-panel-settings" size={24} color={theme.colors.lightGreen} />
             )}
             {isEnrolled && (
-              <MaterialIcons name="check-circle" size={24} color={theme.colors.lightGreen} />
+              <MaterialIcons name="check-circle" size={24} color={theme.colors.blue} />
             )}
           </View>
           <View style={homeScreenStyles.iconTextRow}>
