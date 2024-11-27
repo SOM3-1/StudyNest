@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Modal, Text, TouchableOpacity, Alert, ToastAndroid } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { addStudySession } from '@store/appSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addStudySession, AppState } from '@store/appSlice';
 import { DateTime } from 'luxon';
 import DatePicker from 'react-native-date-picker';
 import { Picker } from '@react-native-picker/picker';
@@ -26,6 +26,7 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
     const [showToPicker, setShowToPicker] = useState(false);
 
     const isFormValid = sessionTitle && from && to && location && major && participantLimit >= 2;
+    const isConnnected = useSelector((state: AppState) => state.network.isConnected);
 
     const close = () => {
         clearFields();
@@ -84,19 +85,24 @@ export const AddSessionsModal: React.FC<{ isVisible: boolean; onClose: () => voi
     };
 
     const handleCreateSession = () => {
-        dispatch(addStudySession({
-            sessionTitle,
-            description,
-            from: from.toISOString(),
-            to: to.toISOString(),
-            location,
-            major,
-            participantLimit
-        }));
+        if (isConnnected) {
+            dispatch(addStudySession({
+                sessionTitle,
+                description,
+                from: from.toISOString(),
+                to: to.toISOString(),
+                location,
+                major,
+                participantLimit
+            }));
 
-        ToastAndroid.show('Session created successfully!', ToastAndroid.LONG);
-        clearFields();
-        onClose();
+            ToastAndroid.show('Session created successfully!', ToastAndroid.LONG);
+            clearFields();
+            onClose();
+        }
+        else {
+            ToastAndroid.show('Unable to connect to the network!', ToastAndroid.LONG);
+        }
     };
 
     const handleCancel = () => {

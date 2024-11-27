@@ -16,54 +16,62 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const users = useSelector((state: AppState) => state.users);
+
+  const isConnnected = useSelector((state: AppState) => state.network.isConnected);
   const dispatch = useDispatch();
 
   const validateEmail = (email: string) => {
     if (!/\S+@\S+\.\S+/.test(email)) {
       setError('Invalid email format');
-      return false; 
+      return false;
     }
-    setError(''); 
+    setError('');
     return true;
   };
 
   const handleLogin = async () => {
-    setIsLoading(true);
-    setError('');
 
-    if (!email || !password) {
-      setError('Email and password are required');
-      setIsLoading(false);
-      return;
-    }
+    if (isConnnected) {
+      setIsLoading(true);
+      setError('');
 
-    if (!validateEmail(email)) {
-      setIsLoading(false); 
-      return;
-    }
+      if (!email || !password) {
+        setError('Email and password are required');
+        setIsLoading(false);
+        return;
+      }
 
-    try {
-      const user = users.find(user => user.email.toLowerCase() === email.toLowerCase() && user.password === password);
-      if (user) {
-        setTimeout(() => {
-          dispatch(loginUser({ email, password }));
-          ToastAndroid.show('Logged in successfully!', ToastAndroid.SHORT);
+      if (!validateEmail(email)) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const user = users.find(user => user.email.toLowerCase() === email.toLowerCase() && user.password === password);
+        if (user) {
+          setTimeout(() => {
+            dispatch(loginUser({ email, password }));
+            ToastAndroid.show('Logged in successfully!', ToastAndroid.SHORT);
+
+            setError('');
+            setIsLoading(false);
+          }, 1000);
 
           setError('');
-          setIsLoading(false);
-        }, 1000);
-
-        setError('');
-      } else {
-        setTimeout(() => {
-          setError('Invalid email or password');
-          setIsLoading(false);
-        }, 1000)
+        } else {
+          setTimeout(() => {
+            setError('Invalid email or password');
+            setIsLoading(false);
+          }, 1000)
+        }
+      } catch (err) {
+        setError('An error occurred during login');
+        log.error('Login error:', err);
+        setIsLoading(false);
       }
-    } catch (err) {
-      setError('An error occurred during login');
-      log.error('Login error:', err);
-      setIsLoading(false);
+    }
+    else {
+      ToastAndroid.show('Unable to connect to the network!', ToastAndroid.LONG);
     }
   };
 
@@ -97,7 +105,7 @@ export const Login: React.FC<{ handleSelection: (val: SelectionType) => void }> 
       </View>
 
       <TouchableOpacity
-        style={[loginStyles.button, (isLoading || !email || password.length<8) && loginStyles.disabledButton]}
+        style={[loginStyles.button, (isLoading || !email || password.length < 8) && loginStyles.disabledButton]}
         onPress={handleLogin}
         disabled={isLoading}
       >

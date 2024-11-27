@@ -6,9 +6,11 @@ import useMenuStyles from './useMenuStyle';
 import { TabNavigator } from './TabNavigator';
 import { AppState } from '@ourtypes/AppState';
 import { UserSelection } from '@components/user/UserSelection';
-import { Notifications } from 'src/commom/notifications/Notifications';
 import { trackScreenName } from 'src/analytics/trackScreenName';
 import { initializeSessions, initializeUsers } from '@store/appSlice';
+
+import NetInfo from '@react-native-community/netinfo';
+import { setNetworkStatus } from '@store/appSlice';
 
 export const MenuWrapperComponent = () => {
   const styles = useMenuStyles();
@@ -27,6 +29,15 @@ export const MenuWrapperComponent = () => {
   useEffect(() => {
     dispatch(initializeUsers());
     dispatch(initializeSessions());
+  }, [dispatch]);
+
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      dispatch(setNetworkStatus({ isConnected: state.isConnected ?? false }));
+    });
+
+    return () => unsubscribe();
   }, [dispatch]);
 
   const stateChange = async () => {

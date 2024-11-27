@@ -19,6 +19,7 @@ interface ViewSessionDetailsProps {
 }
 
 const formatTitle = (title: string) => title.trim().toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+const isConnnected = useSelector((state: AppState) => state.network.isConnected);
 
 export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   isVisible,
@@ -71,33 +72,45 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   };
 
   const handleEnroll = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      dispatch(enrollInStudySession({ sessionId: sessionData?.sessionId || '' }));
-      showToast(`You have enrolled in ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
-      onClose();
-      setIsLoading(false);
-    }, 2000);
+    if (isConnnected) {
+      setIsLoading(true);
+      setTimeout(() => {
+        dispatch(enrollInStudySession({ sessionId: sessionData?.sessionId || '' }));
+        showToast(`You have enrolled in ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
+        onClose();
+        setIsLoading(false);
+      }, 2000);
+    } else {
+      ToastAndroid.show('Unable to connect to the network!', ToastAndroid.LONG);
+    }
   };
 
   const handleLeave = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      dispatch(leaveStudySession({ sessionId: sessionData?.sessionId || '' }));
-      showToast(`You have left ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
-      onClose();
-      setIsLoading(false);
-    }, 2000);
+    if (isConnnected) {
+      setIsLoading(true);
+      setTimeout(() => {
+        dispatch(leaveStudySession({ sessionId: sessionData?.sessionId || '' }));
+        showToast(`You have left ${formatTitle(sessionData?.sessionTitle || 'Session')}.`);
+        onClose();
+        setIsLoading(false);
+      }, 2000);
+    } else {
+      ToastAndroid.show('Unable to connect to the network!', ToastAndroid.LONG);
+    }
   };
 
   const handleRemove = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      dispatch(removeStudySession({ sessionId: sessionData?.sessionId || '' }));
-      showToast(`${formatTitle(sessionData?.sessionTitle || 'Session')} removed successfully.`);
-      onClose();
-      setIsLoading(false);
-    }, 2000);
+    if (isConnnected) {
+      setIsLoading(true);
+      setTimeout(() => {
+        dispatch(removeStudySession({ sessionId: sessionData?.sessionId || '' }));
+        showToast(`${formatTitle(sessionData?.sessionTitle || 'Session')} removed successfully.`);
+        onClose();
+        setIsLoading(false);
+      }, 2000);
+    } else {
+      ToastAndroid.show('Unable to connect to the network!', ToastAndroid.LONG);
+    }
   };
 
   const showToast = (message: string) => {
@@ -132,8 +145,8 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
     }
     return (
       <TouchableWithoutFeedback>
-        <View  style={[modalStyles.button, modalStyles.disabledButton]}>
-        <Text style={modalStyles.buttonText}>Enroll</Text>
+        <View style={[modalStyles.button, modalStyles.disabledButton]}>
+          <Text style={modalStyles.buttonText}>Enroll</Text>
         </View>
       </TouchableWithoutFeedback>
     );
@@ -181,7 +194,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
           )}
 
           {isSessionLimitReached && !isOwner && (
-            <Text style={{...modalStyles.ownerText, color: theme.colors.red}}>This session has reached its participant limit. Enrollment is no longer available.</Text>
+            <Text style={{ ...modalStyles.ownerText, color: theme.colors.red }}>This session has reached its participant limit. Enrollment is no longer available.</Text>
           )}
 
           <View style={modalStyles.buttonContainer}>

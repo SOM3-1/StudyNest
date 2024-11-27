@@ -18,7 +18,8 @@ const initialState: AppState = {
   isLoggedIn: false,
   users: [],
   loggedInUser: undefined,
-  sessions: []
+  sessions: [],
+  network: { isConnected: true }
 }
 
 const slice = createSlice({
@@ -135,10 +136,13 @@ const slice = createSlice({
         trackSessionLeave(sessionId, state.loggedInUser.iD, userName);
       }
     },
+    setNetworkStatus: (state, action: PayloadAction<{ isConnected: boolean }>) => {
+      state.network.isConnected = action.payload.isConnected;
+    },
   }
 });
 
 const persistedReducer = persistReducer(persistConfig, slice.reducer);
 export { persistedReducer as appReducer };
-export const { registerUser, loginUser, logoutUser, addStudySession, removeStudySession, enrollInStudySession, leaveStudySession, initializeSessions, initializeUsers } = slice.actions;
+export const { registerUser, loginUser, logoutUser, addStudySession, removeStudySession, enrollInStudySession, leaveStudySession, initializeSessions, initializeUsers, setNetworkStatus } = slice.actions;
 export type { AppState };

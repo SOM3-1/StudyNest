@@ -22,6 +22,8 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
   const users = useSelector((state: AppState) => state.users);
   const dispatch = useDispatch();
 
+  const isConnnected = useSelector((state: AppState) => state.network.isConnected);
+
   const validateEmail = (email: string) => {
     if (!/\S+@\S+\.\S+/.test(email)) {
       setError('Invalid email format');
@@ -45,49 +47,55 @@ export const Register: React.FC<{ handleSelection: (val: SelectionType) => void 
   };
 
   const handleRegister = async () => {
-    setIsLoading(true);
-    setError('');
-    if (!fullName || !email || !major || !password) {
-      setError('All fields are required');
-      setIsLoading(false);
-      return;
-    }
-
-    if (!validateEmail(email) || !validatePassword(password)) {
-      setIsLoading(false);
-      return;
-    }
-    const emailLower = email.toLowerCase();
-    if (users.find(user => user.email.toLowerCase() === emailLower)) {
-      setError('Email is already registered');
-      setIsLoading(false);
-      return;
-    }
-
-
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const newUser = { fullName, email: emailLower, major, password, iD: generateUUID() };
-      setTimeout(() => {
-        dispatch(registerUser(newUser));
-        ToastAndroid.show('User account created successfully!', ToastAndroid.SHORT);
-
-        setFullName('');
-        setEmail('');
-        setMajor('');
-        setPassword('');
-
-      }, 1000)
-    } catch (err) {
-      setTimeout(() => {
-        setError('An error occurred during registration');
+    if (isConnnected) {
+      setIsLoading(true);
+      setError('');
+      if (!fullName || !email || !major || !password) {
+        setError('All fields are required');
         setIsLoading(false);
-        log.error('Registration error:', err);
-      }, 1000)
-    } finally {
-      setTimeout(() => {
-        setIsLoading(false);}, 1000)
+        return;
+      }
+
+      if (!validateEmail(email) || !validatePassword(password)) {
+        setIsLoading(false);
+        return;
+      }
+      const emailLower = email.toLowerCase();
+      if (users.find(user => user.email.toLowerCase() === emailLower)) {
+        setError('Email is already registered');
+        setIsLoading(false);
+        return;
+      }
+
+
+      try {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        const newUser = { fullName, email: emailLower, major, password, iD: generateUUID() };
+        setTimeout(() => {
+          dispatch(registerUser(newUser));
+          ToastAndroid.show('User account created successfully!', ToastAndroid.SHORT);
+
+          setFullName('');
+          setEmail('');
+          setMajor('');
+          setPassword('');
+
+        }, 1000)
+      } catch (err) {
+        setTimeout(() => {
+          setError('An error occurred during registration');
+          setIsLoading(false);
+          log.error('Registration error:', err);
+        }, 1000)
+      } finally {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000)
+      }
+    }
+    else {
+      ToastAndroid.show('Unable to connect to the network!', ToastAndroid.LONG);
     }
   };
 
