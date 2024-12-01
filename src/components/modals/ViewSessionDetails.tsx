@@ -126,6 +126,38 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
 
   const renderActionButton = () => {
 
+    if (isSessionExpired) {
+
+      if (isOwner) {
+        return (
+          <TouchableWithoutFeedback>
+            <View style={[modalStyles.button, modalStyles.disabledButton]}>
+              <Text style={modalStyles.buttonText}>Remove Session</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        );
+      }
+
+      if (isEnrolled) {
+        return (
+
+          <TouchableWithoutFeedback>
+            <View style={[modalStyles.button, modalStyles.disabledButton]}>
+              <Text style={modalStyles.buttonText}>Leave Session</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        );
+      }
+      return (
+        <TouchableWithoutFeedback>
+          <View style={[modalStyles.button, modalStyles.disabledButton]}>
+            <Text style={modalStyles.buttonText}>Enroll</Text>
+          </View>
+        </TouchableWithoutFeedback>
+      );
+
+    }
+
     if (isOwner) {
       return (
         <TouchableOpacity style={modalStyles.removeButton} onPress={confirmAndHandleRemove}>
@@ -135,36 +167,20 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
     }
 
     if (isEnrolled) {
-      if (!isSessionExpired) {
-        return (
-          <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={confirmAndHandleLeave}>
-            <Text style={modalStyles.buttonText}>Leave Session</Text>
-          </TouchableOpacity>
-        );
-      }
       return (
-        <TouchableOpacity style={[modalStyles.button, modalStyles.disabledButton]}>
+        <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={confirmAndHandleLeave}>
           <Text style={modalStyles.buttonText}>Leave Session</Text>
         </TouchableOpacity>
       );
     }
 
     if (!isSessionLimitReached) {
-      if (!isSessionExpired) {
-        return (
-          <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={handleEnroll}>
-            <Text style={modalStyles.buttonText}>Enroll</Text>
-          </TouchableOpacity>
-        );
-
-      }
       return (
-        <TouchableWithoutFeedback>
-          <View style={[modalStyles.button, modalStyles.disabledButton]}>
-            <Text style={modalStyles.buttonText}>Enroll</Text>
-          </View>
-        </TouchableWithoutFeedback>
+        <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={handleEnroll}>
+          <Text style={modalStyles.buttonText}>Enroll</Text>
+        </TouchableOpacity>
       );
+
     }
     return (
       <TouchableWithoutFeedback>
@@ -223,7 +239,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
             )
           )}
 
-          {isSessionLimitReached && !isOwner && (
+          {isSessionLimitReached && !isOwner && !isSessionExpired && (
             <Text style={{ ...modalStyles.ownerText, color: theme.colors.red }}>This session has reached its participant limit. Enrollment is no longer available.</Text>
           )}
 
