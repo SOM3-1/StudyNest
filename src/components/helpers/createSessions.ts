@@ -33,11 +33,12 @@ export const generateRandomSessions = (): Session[] => {
         return shuffledUsers.slice(0, count).map(user => user.iD);
     };
 
-    const totalDays = 6;
+    const totalDays = 10;
     const minSessionsPerDay = 3;
     const maxSessionsPerDay = 4;
+    const daysInPast = 3
 
-    for (let day = 0; day < totalDays; day++) {
+    for (let day = -daysInPast; day < totalDays; day++) { 
         const currentDay = DateTime.now().plus({ days: day });
         const sessionsToday = Math.floor(Math.random() * (maxSessionsPerDay - minSessionsPerDay + 1)) + minSessionsPerDay;
 

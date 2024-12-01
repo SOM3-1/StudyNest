@@ -18,8 +18,7 @@ interface ViewSessionDetailsProps {
   isOwner: boolean;
 }
 
-const formatTitle = (title: string) => title.trim().toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
-const isConnnected = useSelector((state: AppState) => state.network.isConnected);
+
 
 export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   isVisible,
@@ -27,6 +26,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   sessionData,
   isOwner,
 }) => {
+  const formatTitle = (title: string) => title.trim().toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
   const dispatch = useDispatch();
   const users = useSelector((state: AppState) => state.users);
   const loggedInUser = useSelector((state: AppState) => state.loggedInUser);
@@ -35,12 +35,15 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   const isEnrolled = sessionData?.sessionMembers.includes(loggedInUser?.iD || '');
   const [isLoading, setIsLoading] = useState(false);
 
+  const isConnnected = useSelector((state: AppState) => state.network.isConnected);
+
   const fromDateTime = DateTime.fromISO(sessionData?.from || '');
   const toDateTime = DateTime.fromISO(sessionData?.to || '');
   const sameDate = fromDateTime.hasSame(toDateTime, 'day');
 
   const isSessionLimitReached: boolean = sessionData?.sessionMembers?.length === sessionData?.participantLimit;
-
+  const currentDateTime = DateTime.now();
+  const isSessionExpired = fromDateTime < currentDateTime;
   const dateDisplay = sameDate
     ? `${fromDateTime.toFormat('yyyy-MM-dd')} | ${fromDateTime.toFormat('HH:mm')} - ${toDateTime.toFormat('HH:mm')}`
     : `${fromDateTime.toFormat('yyyy-MM-dd HH:mm')} - ${toDateTime.toFormat('yyyy-MM-dd HH:mm')}`;
@@ -122,6 +125,7 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
   };
 
   const renderActionButton = () => {
+
     if (isOwner) {
       return (
         <TouchableOpacity style={modalStyles.removeButton} onPress={confirmAndHandleRemove}>
@@ -129,18 +133,37 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
         </TouchableOpacity>
       );
     }
+
     if (isEnrolled) {
+      if (!isSessionExpired) {
+        return (
+          <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={confirmAndHandleLeave}>
+            <Text style={modalStyles.buttonText}>Leave Session</Text>
+          </TouchableOpacity>
+        );
+      }
       return (
-        <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={confirmAndHandleLeave}>
+        <TouchableOpacity style={[modalStyles.button, modalStyles.disabledButton]}>
           <Text style={modalStyles.buttonText}>Leave Session</Text>
         </TouchableOpacity>
       );
     }
+
     if (!isSessionLimitReached) {
+      if (!isSessionExpired) {
+        return (
+          <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={handleEnroll}>
+            <Text style={modalStyles.buttonText}>Enroll</Text>
+          </TouchableOpacity>
+        );
+
+      }
       return (
-        <TouchableOpacity style={[modalStyles.button, modalStyles.activeButton]} onPress={handleEnroll}>
-          <Text style={modalStyles.buttonText}>Enroll</Text>
-        </TouchableOpacity>
+        <TouchableWithoutFeedback>
+          <View style={[modalStyles.button, modalStyles.disabledButton]}>
+            <Text style={modalStyles.buttonText}>Enroll</Text>
+          </View>
+        </TouchableWithoutFeedback>
       );
     }
     return (
@@ -188,9 +211,16 @@ export const ViewSessionDetails: React.FC<ViewSessionDetailsProps> = ({
             <MaterialIcons name="person" size={20} color={theme.colors.blue} />
             <Text style={modalStyles.detailText}>Hosted By: {creatorName}</Text>
           </View>
-
-          {isOwner && (
-            <Text style={modalStyles.ownerText}>You are the owner of this session.</Text>
+          {isSessionExpired ? (
+            <Text style={{ ...modalStyles.ownerText, color: theme.colors.red }}>
+              {isOwner
+                ? "This session is expired. You won't be able to take any actions, even as the owner."
+                : "This session is expired. You won't be able to take any actions."}
+            </Text>
+          ) : (
+            isOwner && (
+              <Text style={modalStyles.ownerText}>You are the owner of this session.</Text>
+            )
           )}
 
           {isSessionLimitReached && !isOwner && (
